@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<!--
+BEST JEWEL is a jewel game with multiple mods.
+Copyright © 2013 Rémi DUCCESCHI
+remi.ducceschi@gmail.com
+
+This file is part of Best Jewel.
+
+Best Jewel is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<title>Best Jewel</title>
+<meta name="author" content="Rémi Ducceschi">
+<meta name="application-name" content="Best Jewel game">
+<link rel="stylesheet" href="src/style.css" />
+</head>
+<body>
+<section id="main">
+	<canvas id="mainGame" width="600" height="600" tabindex="1">The game cannot be launched on your computer.</canvas>
+</section>
+<aside id="display">
+	<p id="points">POINTS</p>
+	<p id="moves">MOVES</p>
+	<p id="time">TIME</p>
+	<button type="button" id="help">Show move</button>
+	<button type="button" id="restart">New Game</button>
+	<label for="difficulty">Difficulty: </label>
+	<select name="difficulty" id="difficulty">
+		<option value="TEST">Test</option>
+		<option value="VERYEASY">Very easy</option>
+		<option value="EASY">Easy</option>
+		<option value="INTERMEDIATE" selected>Intermediate</option>
+		<option value="HARD">Hard</option>
+		<option value="VERYHARD">Very hard</option>
+	</select>
+</aside>
+
+	<script src="src/Grid.js"></script>
+	<script src="src/Diamond.js"></script>
+	<script src="src/VisualGrid.js"></script>
+	<script src="src/StandardGame.js"></script>
+	<script>
+		(function()
+		{
+			var date = new Date(), game, context, button, list;
+			var canvas = document.querySelector("#mainGame");
+			if (!canvas)
+			{
+				alert("Impossible de récupérer le canvas");
+				return;
+			}
+			context = canvas.getContext("2d");
+			if (!context)
+			{
+				alert("Impossible de récupérer le context");
+				return;
+			}
+
+			canvas.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+
+			canvas.style.background = "url(src/background2.png) no-repeat center";
+			canvas.style.backgroundSize = "100% 100%";
+			game = new StandardGame(context);
+			game.changeDifficulty(DIFFICULTY.INTERMEDIATE);
+			game.setHTMLPoints(document.querySelector("#points"));
+			game.setHTMLMoves(document.querySelector("#moves"));
+			game.setHTMLTime(document.querySelector("#time"));
+
+			list = document.querySelector("#difficulty");
+			list.addEventListener("change", function() {
+				game.changeDifficulty(DIFFICULTY[list.options[list.selectedIndex].value]);
+				game.newGame();
+			});
+
+			button = document.querySelector("#help");
+			button.addEventListener("click", game.findMove);
+			button = document.querySelector("#restart");
+			button.addEventListener("click", game.newGame);
+
+			game.newGame();
+			console.log(Date.now() - date + " ms");
+		})();
+	</script>
+</body>
+</html>

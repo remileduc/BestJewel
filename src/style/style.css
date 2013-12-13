@@ -1,0 +1,60 @@
+/*
+BEST JEWEL is a jewel game with multiple mods.
+Copyright © 2013 Rémi DUCCESCHI
+remi.ducceschi@gmail.com
+
+This file is part of Best Jewel.
+
+Best Jewel is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+body
+{
+	background-color: black;
+	color: #CCC;
+	border: 1px solid white;
+}
+
+section, aside
+{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+aside
+{
+	margin: 5%;
+}
+
+canvas
+{
+	margin: 5%;
+	border: 1px solid white;
+}
+
+button
+{
+	display: block;
+	margin: 3px;
+}
+
+@media (min-aspect-ratio: 1/1) /* width >= height (landscape) */
+{
+
+}
+
+@media (max-aspect-ratio: 1/1) /* width <= height (portrait) */
+{
+
+}

@@ -1,0 +1,10 @@
+# LaTeX files
+*tmp*
+.rtf
+.texlipse
+
+# temporary linux and eclipse files
+*~
+*.settings
+
+
