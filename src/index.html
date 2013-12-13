@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <title>Best Jewel</title>
 <meta name="author" content="Rémi Ducceschi">
 <meta name="application-name" content="Best Jewel game">
-<link rel="stylesheet" href="src/style.css" />
+<link rel="stylesheet" href="style/style.css" />
 </head>
 <body>
 <section id="main">
@@ -48,10 +48,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	</select>
 </aside>
 
-	<script src="src/Grid.js"></script>
-	<script src="src/Diamond.js"></script>
-	<script src="src/VisualGrid.js"></script>
-	<script src="src/StandardGame.js"></script>
+	<script src="js/Grid.js"></script>
+	<script src="js/Diamond.js"></script>
+	<script src="js/VisualGrid.js"></script>
+	<script src="js/StandardGame.js"></script>
 	<script>
 		(function()
 		{
@@ -71,7 +71,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			canvas.addEventListener("contextmenu", function(e) { e.preventDefault(); });
 
-			canvas.style.background = "url(src/background2.png) no-repeat center";
+			canvas.style.background = "url(style/images/background2.png) no-repeat center";
 			canvas.style.backgroundSize = "100% 100%";
 			game = new StandardGame(context);
 			game.changeDifficulty(DIFFICULTY.INTERMEDIATE);
