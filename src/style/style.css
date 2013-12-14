@@ -24,12 +24,16 @@ body
 	background-color: black;
 	color: #CCC;
 	border: 1px solid white;
+	margin: 12px;
+	padding: 25px;
 }
 
 section, aside
 {
 	display: inline-block;
 	vertical-align: middle;
+	margin: 20px;
+	padding: 10px;
 }
 
 aside
@@ -41,6 +45,8 @@ canvas
 {
 	margin: 5%;
 	border: 1px solid white;
+	margin: 12px;
+	padding: 25px;
 }
 
 button

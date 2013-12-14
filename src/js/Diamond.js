@@ -28,10 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 function Diamonds (colour, image)
 {
-	var color = colour;
 	var size = 0;
-	var position = { x: 0, y: 0 };
-	var sprite = image;
+	var position = new Point();
+	const color = colour;
+	const sprite = image;
 
 	/**
 	 * print the diamond at the given position
@@ -63,13 +63,21 @@ function Diamonds (colour, image)
 	 */
 	this.setSize = function(taille) { size = taille; };
 
-	/** @return the position (center of the diamond) */
-	this.getPosition = function() { return position; };
+	/** @return the position (center of the diamond), a new one, no reference */
+	this.getPosition = function()
+	{
+		return new Point(position.x, position.y);
+	};
 
 	/**
+	 * changes values, no reference
 	 * @param pos the new position. This must be the center of the diamond
 	 */
-	this.setPosition = function(pos) { position = pos; };
+	this.setPosition = function(pos)
+	{
+		position.x = pos.x;
+		position.y = pos.y;
+	};
 
 	/** @return the color of the object */
 	this.getSprite = function() { return sprite; };

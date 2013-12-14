@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * The different possible colors for diamonds
  */
-var COLORS = {
+const COLORS = {
 		UNDEFINED: -1,
 		BLUE: 0,
 		GREEN: 1,
@@ -39,13 +39,25 @@ var COLORS = {
 /**
  * represent the status of a diamond
  */
-var STATUS = { // POSSIBLE + SELECTED = 5; POSSIBLE + NORMAL = 4; -> diamonds.status - SELECTED = the good thing!
+const STATUS = { // POSSIBLE + SELECTED = 5; POSSIBLE + NORMAL = 4; -> diamonds.status - SELECTED = the good thing!
 		HOLE: -1, // there is a hole: no diamonds here
 		NEW: 0, // this diamond is new, it has just been moved in the grid or it just appeared
 		NORMAL: 1, // nothing particular
 		POSSIBLE: 2, // by moving this diamond, you make a valid move (3 diamonds aligned)
 		SELECTED: 3 // this diamond is selected by the user
 };
+
+/**
+ * represent a 2D point with x and y coordinates.
+ * this point can be either in the grid, or in the window...
+ * @param x the x position, -1 if non valid
+ * @param y the y position, -1 if non valid
+ */
+function Point (x, y)
+{
+	this.x = typeof x === "undefined" ? -1 : x;
+	this.y = typeof y === "undefined" ? -1 : y;
+}
 
 /**
  * represent the data of the grid (non drawn)
@@ -55,9 +67,9 @@ var STATUS = { // POSSIBLE + SELECTED = 5; POSSIBLE + NORMAL = 4; -> diamonds.st
 function Grid (taille, nbColours)
 {
 	/** The size of the grid */
-	var size = taille;
+	const size = taille;
 	/** the number of colors in the grid */
-	var nbColors = nbColours;
+	const nbColors = nbColours;
 	/** the number of possible moves. If -1, we don't know yet, computing */
 	var nbMoves = -1;
 	/** The grid with the color of elements */
@@ -98,7 +110,7 @@ function Grid (taille, nbColours)
 	/**
 	 * find all the 3 or more aligned diamonds
 	 * @return a list of all destroyed diamonds (unsorted). if no aligned, return [] (empty array)
-	 * points = { x: X, y: Y } @see populate()
+	 * Point = { x: X, y: Y } @see Point(x, y)
 	 */
 	this.findAligned = function()
 	{
@@ -126,15 +138,15 @@ function Grid (taille, nbColours)
 						if (statusGrid[i - 2][j] !== STATUS.HOLE)
 						{
 							statusGrid[i - 2][j] = STATUS.HOLE;
-							points.push({ x: i - 2, y: j });
+							points.push(new Point(i - 2, j));
 						}
 						if (statusGrid[i - 1][j] !== STATUS.HOLE)
 						{
 							statusGrid[i - 1][j] = STATUS.HOLE;
-							points.push({ x: i - 1, y: j });
+							points.push(new Point(i - 1, j));
 						}
 						statusGrid[i][j] = STATUS.HOLE;
-						points.push({ x: i, y: j });
+						points.push(new Point(i, j));
 					}
 					// horizontal
 					if (j - 2 >= 0 && colorGrid[i][j - 2] === color && colorGrid[i][j - 1] === color)
@@ -142,17 +154,17 @@ function Grid (taille, nbColours)
 						if (statusGrid[i][j - 2] !== STATUS.HOLE)
 						{
 							statusGrid[i][j - 2] = STATUS.HOLE;
-							points.push({ x: i, y: j - 2 });
+							points.push(new Point(i, j - 2));
 						}
 						if (statusGrid[i][j - 1] !== STATUS.HOLE)
 						{
 							statusGrid[i][j - 1] = STATUS.HOLE;
-							points.push({ x: i, y: j - 1 });
+							points.push(new Point(i, j - 1));
 						}
 						if (statusGrid[i][j] !== STATUS.HOLE)
 						{
 							statusGrid[i][j] = STATUS.HOLE;
-							points.push({ x: i, y: j });
+							points.push(new Point(i, j));
 						}
 					}
 				}
@@ -160,9 +172,9 @@ function Grid (taille, nbColours)
 					statusGrid[i][j] += STATUS.SELECTED;
 			}
 		}
-		j = points.length;
-		for (i = 0; i < length; i++)
-			colorGrid[points.x][points.y] = COLORS.UNDEFINED;
+		const len = points.length;
+		for (i = 0; i < len; i++)
+			colorGrid[points[i].x][points[i].y] = COLORS.UNDEFINED;
 		return points;
 	};
 
@@ -201,7 +213,7 @@ function Grid (taille, nbColours)
 	 * fill the empty places (where diamonds just have been destroyed).
 	 * you MUST have call this.niagara() BEFORE
 	 * @return the list of all new points ordered by their depth. if nothing has been added, return [] (empty array)
-	 * point = { x: X, y: Y }
+	 * Point = { x: X, y: Y } @see Point(x, y)
 	 */
 	this.populate = function()
 	{
@@ -216,7 +228,7 @@ function Grid (taille, nbColours)
 				{
 					colorGrid[i][j] = Math.floor(Math.random() * nbColors);
 					statusGrid[i][j] = STATUS.NEW;
-					points.push({ x: i, y: j });
+					points.push(new Point(i, j));
 				}
 			}
 		}
@@ -299,50 +311,46 @@ function Grid (taille, nbColours)
 
 	/**
 	 * select or not the ginven diamond
-	 * @param x the depth (ordinate) in the grid
-	 * @param y the width (abscissa) in the grid
+	 * @param pos the position of the point in the grid (Point)
 	 * @param selected a boolean telling if we must select the item (true) or not (false)
 	 */
-	this.setSelected = function(x, y, selected)
+	this.setSelected = function(pos, selected)
 	{
-		if (statusGrid[x][y] !== STATUS.HOLE)
+		if (statusGrid[pos.x][pos.y] !== STATUS.HOLE)
 		{
-			if (selected && statusGrid[x][y] < STATUS.SELECTED)
-				statusGrid[x][y] += STATUS.SELECTED;
-			else if (!selected && statusGrid[x][y] >= STATUS.SELECTED)
-				statusGrid[x][y] -= STATUS.SELECTED;
+			if (selected && statusGrid[pos.x][pos.y] < STATUS.SELECTED)
+				statusGrid[pos.x][pos.y] += STATUS.SELECTED;
+			else if (!selected && statusGrid[pos.x][pos.y] >= STATUS.SELECTED)
+				statusGrid[pos.x][pos.y] -= STATUS.SELECTED;
 		}
 	};
 
 	/**
 	 * @return true if the element is selected
-	 * @param x the depth (ordinate) in the grid
-	 * @param y the width (abscissa) in the grid
+	 * @param pos the position of the point in the grid (Point)
 	 * @warning you *must* use this method to know if an element is selected!
 	 */
-	this.isSelected = function(x, y)
+	this.isSelected = function(pos)
 	{
-		return statusGrid[x][y] >= STATUS.SELECTED;
+		return statusGrid[pos.x][pos.y] >= STATUS.SELECTED;
 	};
 
 	/**
 	 * @return the color at the given place
-	 * @param x the depth (ordinate) in the grid
-	 * @param y the width (abscissa) in the grid
+	 * @param pos the position of the point in the grid (Point)
 	 */
-	this.getColorAt = function (x, y)
+	this.getColorAt = function (pos)
 	{
-		return colorGrid[x][y];
+		return colorGrid[pos.x][pos.y];
 	};
 	
 	/**
 	 * @return the status at the given place
-	 * @param x the depth (ordinate) in the grid
-	 * @param y the width (abscissa) in the grid
+	 * @param pos the position of the point in the grid (Point)
 	 */
-	this.getStatusAt = function (x, y)
+	this.getStatusAt = function (pos)
 	{
-		return statusGrid[x][y];
+		return statusGrid[pos.x][pos.y];
 	};
 
 	/** @return the size of the grid */

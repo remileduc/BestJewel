@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 /** Represent the difficulty of the level */
-var DIFFICULTY = {
+const DIFFICULTY = {
 	TEST: { name: "TEST", gridSize: 4, nbColor: 3 },
 	VERYEASY: { name: "Very easy", gridSize: 12, nbColor: 5 },
 	EASY: { name: "Easy", gridSize: 10, nbColor: 5 },
@@ -100,7 +100,7 @@ function StandardGame (cxt)
 		visualGrid.setPosition({ x: 0, y:0 });
 		visualGrid.setSize(Math.min(context.canvas.width, context.canvas.height));
 		visualGrid.setNbRows(difficulty.gridSize);
-		visualGrid.setBorderWidth(3);
+		visualGrid.setBorderWidth(2);
 		visualGrid.setBorderColor("rgba(255, 255, 255, 0)");
 		visualGrid.setDiamondImages(diamondImages);
 		visualGrid.initialize();
@@ -121,13 +121,13 @@ function StandardGame (cxt)
 
 		if (e.button === 0) // left button
 		{
-			point = visualGrid.convertCoordinates(e.pageX - offsetX, e.pageY - offsetY);
+			point = visualGrid.convertCoordinates(new Point(e.pageX - offsetX, e.pageY - offsetY));
 			if (point.x !== -1 && point.y !== -1) // if we click on a diamond
 			{
 				mouseDown = true;
 				lastClickedPoint = point;
-				grid.setSelected(point.x, point.y, !grid.isSelected(point.x, point.y));
-				if (grid.isSelected(point.x, point.y)) // if the point has been selected
+				grid.setSelected(point, !grid.isSelected(point));
+				if (grid.isSelected(point)) // if the point has been selected
 				{
 					if (size === 0
 							|| (size < 2 && Math.abs(point.x - selectedPoints[0].x)
@@ -136,7 +136,7 @@ function StandardGame (cxt)
 					else // otherwise, we clear the selection
 					{
 						for (i = 0; i < size; i++)
-							grid.setSelected(selectedPoints[i].x, selectedPoints[i].y, false);
+							grid.setSelected(selectedPoints[i], false);
 						selectedPoints = [];
 						selectedPoints.push(point);
 					}
@@ -162,16 +162,16 @@ function StandardGame (cxt)
 
 		if (mouseDown)
 		{
-			point = visualGrid.convertCoordinates(e.pageX - offsetX, e.pageY - offsetY);
+			point = visualGrid.convertCoordinates(new Point(e.pageX - offsetX, e.pageY - offsetY));
 			if (point.x !== -1 && point.y !== -1 && (point.x !== lastClickedPoint.x || point.y !== lastClickedPoint.y)
 					&& Math.abs(point.x - lastClickedPoint.x) + Math.abs(point.y - lastClickedPoint.y) === 1)
 			{
 				size = selectedPoints.length;
 				for (i = 0; i < size; i++)
-					grid.setSelected(selectedPoints[i].x, selectedPoints[i].y, false);
+					grid.setSelected(selectedPoints[i], false);
 				selectedPoints = [];
-				grid.setSelected(lastClickedPoint.x, lastClickedPoint.y, true);
-				grid.setSelected(point.x, point.y, true);
+				grid.setSelected(lastClickedPoint, true);
+				grid.setSelected(point, true);
 				selectedPoints.push(lastClickedPoint);
 				selectedPoints.push(point);
 				if (!animating) // if animating is true, a repaint is programmed
@@ -203,18 +203,18 @@ function StandardGame (cxt)
 			move = Math.floor(Math.random() * possibleMoves);
 			size = selectedPoints.length;
 			for (i = 0; i < size; i++)
-				grid.setSelected(selectedPoints[i].x, selectedPoints[i].y, false);
+				grid.setSelected(selectedPoints[i], false);
 			selectedPoints = [];
 			size = grid.getSize();
 			for (i = 0; i < size; i++)
 			{
 				for (j = 0; j < size; j++)
 				{
-					if (grid.getStatusAt(i, j) === STATUS.POSSIBLE)
+					if (grid.getStatusAt(new Point(i, j)) === STATUS.POSSIBLE)
 					{
 						if (move === 0) // we select it
 						{
-							grid.setSelected(i, j, true);
+							grid.setSelected(new Point(i, j), true);
 							selectedPoints.push({ x: i, y: j });
 							visualGrid.draw(); // we know we are not in an animation, so no repaint is planned
 							return;
@@ -328,7 +328,7 @@ function StandardGame (cxt)
 		{
 			for (j = 0; j < size; j++)
 			{
-				if (grid.isSelected(i, j))
+				if (grid.isSelected(new Point(i, j)))
 					selectedPoints.push({ x: i, y: j });
 			}
 		}
@@ -336,7 +336,7 @@ function StandardGame (cxt)
 		if (sizeS !== size)
 		{
 			for (i = 0; i < size; i++)
-				grid.setSelected(selectedPoints[i].x, selectedPoints[i].y, false);
+				grid.setSelected(selectedPoints[i], false);
 			selectedPoints = [];
 		}
 	};
@@ -352,16 +352,16 @@ function StandardGame (cxt)
 				animating = true;
 				grid.exchange(selectedPoints[0], selectedPoints[1]);
 				visualGrid.exchange(selectedPoints[0], selectedPoints[1]);
-				grid.setSelected(selectedPoints[0].x, selectedPoints[0].y, false);
-				grid.setSelected(selectedPoints[1].x, selectedPoints[1].y, false);
+				grid.setSelected(selectedPoints[0], false);
+				grid.setSelected(selectedPoints[1], false);
 				lastSelectedPoints = selectedPoints; // we save it in case the user select other points, we have a save
 				selectedPoints = [];
 				validExchange();
 			}
 			else // possibly, after a fall, the selection are not aligned anymore
 			{
-				grid.setSelected(selectedPoints[0].x, selectedPoints[0].y, false);
-				grid.setSelected(selectedPoints[1].x, selectedPoints[1].y, false);
+				grid.setSelected(selectedPoints[0], false);
+				grid.setSelected(selectedPoints[1], false);
 				selectedPoints = [];
 				visualGrid.draw();
 			}
@@ -450,7 +450,7 @@ function StandardGame (cxt)
 			{
 				for (j = 0; j < size; j++)
 				{
-					if (grid.isSelected(i, j))
+					if (grid.isSelected(new Point(i, j)))
 						selectedPoints.push({ x: i, y: j });
 				}
 			}

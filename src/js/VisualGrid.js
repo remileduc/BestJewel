@@ -29,21 +29,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function VisualGrid (cxt, grille)
 {
 	/** the canvas' context in which we want to draw */
-	var context = cxt;
+	const context = cxt;
 	/** the non visual grid representing the game */
-	var grid = grille;
+	const grid = grille;
 	/** the 2D array containing the diamonds */
 	var diamonds = [];
 	/** meta object that contains all the sizes and positions */
-	var placement = {
+	const placement = {
 			gridSize: 0, /** the size of the visualisation grid */
-			position: { x: 0, y: 0 }, /** the position of the grid in the canvas */
+			position: new Point(0, 0), /** the position of the grid in the canvas */
 			nbRows: 0, /** the number of elements in a row */
 			rowSize: 0, /** The size of a row */
 			celluleSize: 0 /** the size of a cellule = (rowSize - borderSize) * 0.9 */
 	};
 	/** meta object that contains all the appearance elements */
-	var appearance = {
+	const appearance = {
 			borderWidth: 0,
 			borderColor: "black",
 			diamondImages: ["blue", "green", "lime", "maroon", "purple", "silver", "fuchsia"] /** the list of diamond representations */
@@ -61,7 +61,7 @@ function VisualGrid (cxt, grille)
 	/** the same but it will be called after the main repainting */
 	var listActionsEnd = [];
 	/** Contains all the variables used by the different actions */
-	var actionVars = { // we can access it whenever we want as JS is thread safe
+	const actionVars = { // we can access it whenever we want as JS is thread safe
 			lastFrame: 0, // the time where was displayed the last frame
 			excBeginFrame: 0, // the begin frame of an exchange
 			excPoints: [], // the 2 points to be exchanged
@@ -95,28 +95,28 @@ function VisualGrid (cxt, grille)
 	var moveDiamonds = function(framerate)
 	{
 		var i, points, deplacement = 0, actualPosition, finished = true;
-		var rowsize, offsetY;
+		const rowsize = placement.rowSize, offsetY = rowsize / 2 + placement.position.y;
 
 		points = actionVars.falPoints;
 
 		if (framerate > 0) // otherwise, deplacement = 0
 			deplacement = Math.round((framerate - actionVars.lastFrame) / 1000 * this.animationSpeed);
 
-		rowsize = placement.rowSize;
-		offsetY = rowsize / 2 + placement.position.y;
-		for (i = 0; i < points.length; i++)
+		for (i = 0; i < points.length; i++) // points.length may change
 		{
 			actualPosition = diamonds[points[i].x][points[i].y].getPosition();
 			if (actualPosition.y + deplacement > Math.round(offsetY + points[i].x * rowsize)) // it finishes at the right place
 			{
-				diamonds[points[i].x][points[i].y].setPosition({ x: actualPosition.x, y: Math.round(offsetY + points[i].x * rowsize)});
+				actualPosition.y = Math.round(offsetY + points[i].x * rowsize);
+				diamonds[points[i].x][points[i].y].setPosition(actualPosition);
 				points.splice(i, 1); // this point is finished, we remove it
 				i--;
 			}
 			else // not finished
 			{
+				actualPosition.y += deplacement;
 				finished = false; // by default, finished === true
-				diamonds[points[i].x][points[i].y].setPosition({ x: actualPosition.x, y: actualPosition.y + deplacement});
+				diamonds[points[i].x][points[i].y].setPosition(actualPosition);
 			}
 		}
 
@@ -134,8 +134,8 @@ function VisualGrid (cxt, grille)
 	 */
 	this.draw = function(framerate)
 	{
-		var i, j, lineTo, posX = placement.position.x, posY = placement.position.y, size = placement.gridSize;
-		var offsetX, offsetY, actualPosition, width;
+		var i, j, actualPosition, lineTo, currentPoint = new Point();
+		const size = placement.gridSize, width = placement.rowSize - 2 * appearance.borderWidth;
 
 		if (!framerate)
 		{
@@ -145,8 +145,8 @@ function VisualGrid (cxt, grille)
 		}
 		else if (actionVars.lastFrame === 0)
 			actionVars.lastFrame = framerate;
-		context.clearRect(posX, posY, posX + size, posY + size);
-		//context.clearRect(0, 0, context.canvas.width, context.canvas.height); // optimaized
+		//context.clearRect(posX, posY, posX + size, posY + size);
+		context.clearRect(0, 0, context.canvas.width, context.canvas.height); // optimaized
 
 		// first, we calcul the new coordinates or do whatever
 		if (listActionsBegin.length > 0)
@@ -158,35 +158,33 @@ function VisualGrid (cxt, grille)
 		// then, we draw the grid
 		if (appearance.borderWidth)
 		{
+			const posX = placement.position.x, posY = placement.position.y;
+
 			context.lineWidth = appearance.borderWidth;
 			context.strokeStyle = appearance.borderColor;
 			context.strokeRect(posX, posY, size, size);
-			offsetX = placement.position.x;
-			offsetY = placement.position.y;
 			for (i = 1; i < placement.nbRows; i++)
 			{
 				context.beginPath();
 				lineTo = Math.floor(i * size / placement.nbRows) - 1;
-				context.moveTo(lineTo + offsetX, offsetY);
-				context.lineTo(lineTo + offsetX, size + offsetY);
-				context.moveTo(offsetX, lineTo + offsetY);
-				context.lineTo(size + offsetX, lineTo + offsetY);
+				context.moveTo(lineTo + posX, posY);
+				context.lineTo(lineTo + posX, size + posY);
+				context.moveTo(posX, lineTo + posY);
+				context.lineTo(size + posX, lineTo + posY);
 				context.stroke();
 			}
 		}
 
 		// finally the diamonds
-		lineTo = placement.rowSize;
-		offsetX = placement.position.x;
-		offsetY = placement.position.y;
-		width = lineTo - 2 * appearance.borderWidth;
 		for (i = 0; i < placement.nbRows; i++)
 		{
 			for (j = 0; j < placement.nbRows; j++)
 			{
-				if (diamonds[i][j] !== null && grid.getStatusAt(i, j) !== STATUS.HOLE)
+				currentPoint.x = i;
+				currentPoint.y = j;
+				if (diamonds[i][j] !== null && grid.getStatusAt(currentPoint) !== STATUS.HOLE)
 				{
-					if (grid.isSelected(i, j))
+					if (grid.isSelected(currentPoint))
 					{
 						actualPosition = diamonds[i][j].getPosition();
 						context.beginPath();
@@ -210,12 +208,10 @@ function VisualGrid (cxt, grille)
 
 		// we call this function again until no changes are to made
 		actionVars.lastFrame = framerate;
-		if (listActionsBegin.length > 0 || listActionsEnd.length >0)
+		if (listActionsBegin.length > 0 || listActionsEnd.length > 0)
 			requestAnimationFrame(this.draw);
 		else
-		{
 			setAnimating(false);
-		}
 	};
 
 	/**
@@ -223,7 +219,8 @@ function VisualGrid (cxt, grille)
 	 */
 	this.initialize = function()
 	{
-		var i, j, size = grid.getSize(), points = [];
+		var i, j, points = [];
+		const size = grid.getSize();
 
 		// we create the diamonds
 		diamonds = [];
@@ -233,7 +230,7 @@ function VisualGrid (cxt, grille)
 			for (j = 0; j < size; j++)
 			{
 				diamonds[i].push(null);
-				points.push({ x: i, y: j });
+				points.push(new Point(i, j));
 			}
 		}
 		points.sort(function(a, b) { return b.x - a.x !== 0 ? b.x - a.x : a.y - b.y; });
@@ -241,13 +238,13 @@ function VisualGrid (cxt, grille)
 	};
 
 	/**
-	 * exchange the position of a and b (a and b are points : { x: X, y: Y } @see populate())
+	 * exchange the position of a and b (a and b are Point)
 	 * @param a the first point (after, a become the timestamp)
 	 * @param b the second point
 	 */
 	this.exchange = function(a, b)
 	{
-		var firstTime = false, framerate, percent, posX, posY, points, finished = true;
+		var firstTime = false, framerate, percent, points, finished = true, pos = new Point();
 
 		if (typeof b !== "undefined" && typeof a !== "number") // first time the function is called
 		{
@@ -275,16 +272,16 @@ function VisualGrid (cxt, grille)
 		else // animation finished
 			percent = 1;
 		
-		posX = Math.round((points[1].initPos.x - points[0].initPos.x) * percent + points[0].initPos.x); // first point
-		posY = Math.round((points[1].initPos.y - points[0].initPos.y) * percent + points[0].initPos.y);
-		diamonds[points[0].gridPos.x][points[0].gridPos.y].setPosition({ x: posX, y: posY });
-		posX = Math.round((points[0].initPos.x - points[1].initPos.x) * percent + points[1].initPos.x); // second point
-		posY = Math.round((points[0].initPos.y - points[1].initPos.y) * percent + points[1].initPos.y);
-		diamonds[points[1].gridPos.x][points[1].gridPos.y].setPosition({ x: posX, y: posY });
+		pos.x = Math.round((points[1].initPos.x - points[0].initPos.x) * percent + points[0].initPos.x); // first point
+		pos.y = Math.round((points[1].initPos.y - points[0].initPos.y) * percent + points[0].initPos.y);
+		diamonds[points[0].gridPos.x][points[0].gridPos.y].setPosition(pos);
+		pos.x = Math.round((points[0].initPos.x - points[1].initPos.x) * percent + points[1].initPos.x); // second point
+		pos.y = Math.round((points[0].initPos.y - points[1].initPos.y) * percent + points[1].initPos.y);
+		diamonds[points[1].gridPos.x][points[1].gridPos.y].setPosition(pos);
 
 		if (finished) // action finished we remove the context and the function from listActions
 		{ // finally, we exchange the diamonds in the grid
-			var tmp = diamonds[points[0].gridPos.x][points[0].gridPos.y];
+			const tmp = diamonds[points[0].gridPos.x][points[0].gridPos.y];
 			diamonds[points[0].gridPos.x][points[0].gridPos.y] = diamonds[points[1].gridPos.x][points[1].gridPos.y];
 			diamonds[points[1].gridPos.x][points[1].gridPos.y] = tmp;
 			listActionsBegin.splice(listActionsBegin.indexOf(this.exchange), 1);
@@ -302,15 +299,15 @@ function VisualGrid (cxt, grille)
 	 */
 	this.fall = function(points)
 	{
-		var i, size, swap;
+		var i, swap;
+		const size = points.length;
 
-		size = points.length;
 		for (i = 0; i < size; i++)
 		{
 			swap = diamonds[points[i].x2][points[i].y2];
 			diamonds[points[i].x2][points[i].y2] = diamonds[points[i].x1][points[i].y1];
 			diamonds[points[i].x1][points[i].y1] = swap;
-			actionVars.falPoints.push({ x: points[i].x2, y: points[i].y2 }); // we memorize the points
+			actionVars.falPoints.push(new Point(points[i].x2, points[i].y2)); // we memorize the points
 		}
 
 		if (listActionsBegin.indexOf(moveDiamonds) === -1)
@@ -322,28 +319,25 @@ function VisualGrid (cxt, grille)
 
 	/**
 	 * create new jewels after deletion
-	 * @param points the emplacement of the new jewels sorted by depth (x)
-	 * a point is { x: X, y: Y }.
+	 * @param points the emplacement of the new jewels sorted by depth (x). We have Point
 	 */
 	this.populate = function(points)
 	{
-		var i, color, tmpDiamond, size = points.length, depth = [];
-		var rowsize, offsetX, offsetY;
+		var i, color, tmpDiamond, depth = [];
+		const size = points.length, rowsize = placement.rowSize;
+		const offsetX = rowsize / 2 + placement.position.x, offsetY = rowsize / 2 + placement.position.y;
 
 		for (i = 0; i < placement.nbRows; i++) // initially, all the diamonds are above the grid, so we use depth
 			depth.push(0);
 
-		rowsize = placement.rowSize;
-		offsetX = rowsize / 2 + placement.position.x;
-		offsetY = rowsize / 2 + placement.position.y;
 		for (i = 0; i < size; i++)
 		{
 			if (depth[points[i].y] === 0) // we know that points are srted by depth
 				depth[points[i].y] = points[i].x + 1;
-			color = grid.getColorAt(points[i].x, points[i].y);
+			color = grid.getColorAt(points[i]);
 			tmpDiamond = new Diamonds(color, appearance.diamondImages[color]);
 			tmpDiamond.setSize(placement.celluleSize);
-			tmpDiamond.setPosition({ x: Math.round(offsetX + points[i].y * rowsize), y: Math.round(offsetY + (points[i].x - depth[points[i].y]) * rowsize)});
+			tmpDiamond.setPosition(new Point(Math.round(offsetX + points[i].y * rowsize), Math.round(offsetY + (points[i].x - depth[points[i].y]) * rowsize)));
 			diamonds[points[i].x][points[i].y] = tmpDiamond;
 		}
 
@@ -357,13 +351,13 @@ function VisualGrid (cxt, grille)
 
 	/**
 	 * remove the given diamonds from the grid
-	 * @param points an array of points representing the diamonds. becomes the framerate later
-	 * points = { x: X, y: Y }
+	 * @param points an array of points representing the diamonds. becomes the framerate later. we have Point
 	 */
 	this.removeDiamond = function(points)
 	{
-		var i, j, size, framerate, firstTime = false, finished = true, alpha = 0;
-		var position, sparks, sparkPosition = { x: -1, y: -1, size: -1 };
+		var i, j, framerate, firstTime = false, finished = true, alpha = 0;
+		var position, sparks, sparkPosition = { pos: new Point(), size: -1 };
+		const size = actionVars.rmPoints.length;
 
 		if (typeof points !== "undefined" && Array.isArray(points)) // first time
 		{
@@ -377,7 +371,6 @@ function VisualGrid (cxt, grille)
 		}
 		else
 			framerate = points;
-		size = actionVars.rmPoints.length;
 
 		if (framerate > 0 && framerate > actionVars.lastFrame + 1)
 			alpha = (framerate - actionVars.lastFrame) / 300;
@@ -400,16 +393,16 @@ function VisualGrid (cxt, grille)
 			sparks = Math.random() * 3; // we generate between 0 and 5 sparks
 			for (j = 0; j < sparks; j++)
 			{
-				sparkPosition.x = position.x - (Math.random() * placement.celluleSize * 2/3) + placement.celluleSize * 2/6;
-				sparkPosition.y = position.y - (Math.random() * placement.celluleSize * 2/3) + placement.celluleSize * 2/6;
+				sparkPosition.pos.x = position.x - (Math.random() * placement.celluleSize * 2/3) + placement.celluleSize * 2/6;
+				sparkPosition.pos.y = position.y - (Math.random() * placement.celluleSize * 2/3) + placement.celluleSize * 2/6;
 				sparkPosition.size = Math.random() * placement.celluleSize / 10;
 				context.beginPath();
-				var radial = context.createRadialGradient(sparkPosition.x, sparkPosition.y, sparkPosition.size / 5, sparkPosition.x, sparkPosition.y, sparkPosition.size);
+				var radial = context.createRadialGradient(sparkPosition.pos.x, sparkPosition.pos.y, sparkPosition.size / 5, sparkPosition.pos.x, sparkPosition.pos.y, sparkPosition.size);
 				radial.addColorStop(0, "yellow");
 				radial.addColorStop(0.5, "red");
 				radial.addColorStop(1, 'rgba(0, 0, 0, 0)');
 				context.fillStyle = radial;
-				context.arc(sparkPosition.x, sparkPosition.y, sparkPosition.size, 0, Math.PI * 2);
+				context.arc(sparkPosition.pos.x, sparkPosition.pos.y, sparkPosition.size, 0, Math.PI * 2);
 				context.fill();
 			}
 		}
@@ -432,28 +425,27 @@ function VisualGrid (cxt, grille)
 	/**
 	 * convert the given real coordinates in the grid coordinates.
 	 * the coordinates must be begin at (0, 0) from the top-left corner of the canvas. The coordinates are returned in
-	 * a point = { x: X, y: Y }. If the coordinates are not in the grid, return point = { x: -1, y: -1 }
-	 * @param x the depth (ordinate) in the grid
-	 * @param y the width (abscissa) in the grid
+	 * a Point = { x: X, y: Y }. If the coordinates are not in the grid, return a non valid Point = { x: -1, y: -1 }
+	 * @param pos the position
 	 * @return the coordinates to be used in common functions or with a Grid object
 	 */
-	this.convertCoordinates = function(x, y)
+	this.convertCoordinates = function(pos)
 	{
 		var tmpX, tmpY, cellPos;
 
-		if (x < placement.position.x || x > placement.position.x + placement.gridSize
-				|| y < placement.position.y || y > placement.position.y + placement.gridSize)
-			return { x: -1, y: -1 }; // we are not in the grid
+		if (pos.x < placement.position.x || pos.x > placement.position.x + placement.gridSize
+				|| pos.y < placement.position.y || pos.y > placement.position.y + placement.gridSize)
+			return new Point(); // we are not in the grid
 
 		cellPos = (placement.rowSize - placement.celluleSize) / 2; // divide by to because margin left + right
-		tmpX = (x - placement.position.x) % placement.rowSize; // we get the position in the cell
-		tmpY = (y - placement.position.y) % placement.rowSize;
+		tmpX = (pos.x - placement.position.x) % placement.rowSize; // we get the position in the cell
+		tmpY = (pos.y - placement.position.y) % placement.rowSize;
 		if (tmpX <= cellPos || tmpY <= cellPos || tmpX >= placement.rowSize - cellPos || tmpY >= placement.rowSize - cellPos)
-			return { x: -1, y: -1 }; // we are between 2 diamonds
+			return new Point(); // we are between 2 diamonds
 
-		tmpX = Math.floor((x - placement.position.x) / placement.rowSize) + (tmpX === 0 ? 0 : 1); // we get the correct place
-		tmpY = Math.floor((y - placement.position.y) / placement.rowSize) + (tmpY === 0 ? 0 : 1);
-		return { x: tmpY - 1, y: tmpX - 1 }; // we make it begin at 0 instead of 1
+		tmpX = Math.floor((pos.x - placement.position.x) / placement.rowSize) + (tmpX === 0 ? 0 : 1); // we get the correct place
+		tmpY = Math.floor((pos.y - placement.position.y) / placement.rowSize) + (tmpY === 0 ? 0 : 1);
+		return new Point(tmpY - 1, tmpX - 1); // we make it begin at 0 instead of 1
 	};
 
 	// For the events:
@@ -469,10 +461,10 @@ function VisualGrid (cxt, grille)
 	 */
 	this.fire = function(event)
 	{
+		var i;
 		if (typeof listeners[event] !== "undefined")
 		{
-			var len = listeners[event].length, i;
-			var evt = { type: event, target: this };
+			const len = listeners[event].length, evt = { type: event, target: this };
 
 			for (i = 0; i < len; i++)
 				listeners[event][i].call(this, evt);
