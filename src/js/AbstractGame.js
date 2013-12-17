@@ -93,6 +93,7 @@ function AbstractdGame ()
 		this.updateTime();
 		if (this.isTempo)
 			intervalID = setInterval(this.updateTime, 250); // need to be precise because this function is such a shit
+		fire("gameLaunched");
 	};
 
 	/** Select a diamond that can be moved, to help the user. MUST be bind in inherited objects */
@@ -144,9 +145,7 @@ function AbstractdGame ()
 			this.animating = false;
 			return;
 		}
-		alert("Game finished with " + points + " points.\nTime left: " + htmels.elTime.innerHTML +
-				"\nMoves left: " + possibleMoves + "\n\nA new grid will be generated.");
-		this.newGame();
+		fire("gameFinished");
 	};
 
 	/**

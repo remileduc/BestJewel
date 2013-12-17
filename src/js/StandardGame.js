@@ -304,7 +304,7 @@ function StandardGame (cxt)
 			this.visualGrid.removeEventListener("animationEnd", endAnimation);
 			if (!this.animating) // end of game
 			{
-				updateMoves(this.grid.findMoves());
+				this.updateMoves(this.grid.findMoves());
 				this.endGame();
 			}
 			else
@@ -344,39 +344,38 @@ function StandardGame (cxt)
 	this.computeOffset(context.canvas);
 	// we set the images
 	(function() {
-		var i, images = [];
+		var i, images = [], loadedImg = 0;
+		var checkLoad = function() {
+			loadedImg++;
+			if (loadedImg >= COLORS.NUMBER)
+				this.gameIsReady();
+		};
+		checkLoad = checkLoad.bind(this);
 
 		for (i = 0; i < COLORS.NUMBER; i++)
 			this.diamondImages.push(COLORS.UNDEFINED);
 
 		images.push(new Image());
 		images[0].src = "js/resources/zerg.png";
-		images[0].onload = (function() { this.diamondImages[0] = images[0]; }).bind(this);
-		this.diamondImages[0] = images[0];
+		images[0].onload = (function() { this.diamondImages[0] = images[0]; checkLoad(); }).bind(this);
 		images.push(new Image());
 		images[1].src = "js/resources/terran.png";
-		images[1].onload = (function() { this.diamondImages[1] = images[1]; }).bind(this);
-		this.diamondImages[1] = images[1];
+		images[1].onload = (function() { this.diamondImages[1] = images[1]; checkLoad(); }).bind(this);
 		images.push(new Image());
 		images[2].src = "js/resources/protoss.png";
-		images[2].onload = (function() { this.diamondImages[2] = images[2]; }).bind(this);
-		this.diamondImages[2] = images[2];
+		images[2].onload = (function() { this.diamondImages[2] = images[2]; checkLoad(); }).bind(this);
 		images.push(new Image());
 		images[3].src = "js/resources/zerg2.png";
-		images[3].onload = (function() { this.diamondImages[3] = images[3]; }).bind(this);
-		this.diamondImages[3] = images[3];
+		images[3].onload = (function() { this.diamondImages[3] = images[3]; checkLoad(); }).bind(this);
 		images.push(new Image());
 		images[4].src = "js/resources/terran2.png";
-		images[4].onload = (function() { this.diamondImages[4] = images[4]; }).bind(this);
-		this.diamondImages[4] = images[4];
+		images[4].onload = (function() { this.diamondImages[4] = images[4]; checkLoad(); }).bind(this);
 		images.push(new Image());
 		images[5].src = "js/resources/protoss2.png";
-		images[5].onload = (function() { this.diamondImages[5] = images[5]; }).bind(this);
-		this.diamondImages[5] = images[5];
+		images[5].onload = (function() { this.diamondImages[5] = images[5]; checkLoad(); }).bind(this);
 		images.push(new Image());
 		images[6].src = "js/resources/sc2.png";
-		images[6].onload = (function() { this.diamondImages[6] = images[6]; }).bind(this);
-		this.diamondImages[6] = images[6];
+		images[6].onload = (function() { this.diamondImages[6] = images[6]; checkLoad(); }).bind(this);
 	}).bind(this)();
 }
 
