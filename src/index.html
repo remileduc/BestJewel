@@ -46,27 +46,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<option value="HARD">Hard</option>
 		<option value="VERYHARD">Very hard</option>
 	</select>
+	<p>
+	<input type="checkbox" name="isTempo" id="isTempo" checked /><label for="isTtempo">Temporized game</label>
+	</p>
 </aside>
 
 	<script src="js/Grid.js"></script>
 	<script src="js/Diamond.js"></script>
 	<script src="js/VisualGrid.js"></script>
+	<script src="js/AbstractGame.js"></script>
 	<script src="js/StandardGame.js"></script>
 	<script>
-		(function()
-		{
-			var date = new Date(), game, context, button, list;
+		//(function()
+		//{
+			var date = new Date(), game, context, button, list, check;
 			var canvas = document.querySelector("#mainGame");
 			if (!canvas)
 			{
 				alert("Impossible de récupérer le canvas");
-				return;
+				//return;
 			}
 			context = canvas.getContext("2d");
 			if (!context)
 			{
 				alert("Impossible de récupérer le context");
-				return;
+				//return;
 			}
 
 			canvas.addEventListener("contextmenu", function(e) { e.preventDefault(); });
@@ -74,25 +78,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			canvas.style.background = "url(style/images/background2.png) no-repeat center";
 			canvas.style.backgroundSize = "100% 100%";
 			game = new StandardGame(context);
-			game.changeDifficulty(DIFFICULTY.INTERMEDIATE);
+			game.difficulty = DIFFICULTY.INTERMEDIATE;
+			game.isTempo = true;
 			game.setHTMLPoints(document.querySelector("#points"));
 			game.setHTMLMoves(document.querySelector("#moves"));
 			game.setHTMLTime(document.querySelector("#time"));
 
 			list = document.querySelector("#difficulty");
 			list.addEventListener("change", function() {
-				game.changeDifficulty(DIFFICULTY[list.options[list.selectedIndex].value]);
-				game.newGame();
+				game.endGame();
+				game.difficulty = DIFFICULTY[list.options[list.selectedIndex].value];
+				game.newGame(true);
+			});
+			check = document.querySelector("#isTempo");
+			check.addEventListener("change", function() {
+				game.endGame();
+				game.isTempo = check.checked;
+				game.newGame(true);
 			});
 
 			button = document.querySelector("#help");
 			button.addEventListener("click", game.findMove);
 			button = document.querySelector("#restart");
-			button.addEventListener("click", game.newGame);
+			button.addEventListener("click", function() { game.endGame(); game.newGame(true); });
 
-			game.newGame();
+			game.newGame(true);
 			console.log(Date.now() - date + " ms");
-		})();
+		//})();
 	</script>
 </body>
 </html>
