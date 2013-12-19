@@ -69,7 +69,7 @@ function AbstractdGame ()
 	/** the points gained */
 	var points = 0;
 	/** the begin date of the game */
-	var dateBegin = null;
+	var dateBegin = new Date(0);
 	/** the id of the function in setInterval */
 	var intervalID = null;
 	/** the HTML elements where to write the points etc... */
@@ -87,12 +87,12 @@ function AbstractdGame ()
 	 */
 	this.newGame = function()
 	{
-		dateBegin = new Date();
+		dateBegin.setTime(this.dateLength.getTime());
 		if (intervalID !== null)
 			clearInterval(intervalID);
 		this.updateTime();
 		if (this.isTempo)
-			intervalID = setInterval(this.updateTime, 250); // need to be precise because this function is such a shit
+			intervalID = setInterval(this.updateTime, 1000);
 		fire("gameLaunched");
 	};
 
@@ -192,24 +192,19 @@ function AbstractdGame ()
 	/** for temporized games. MUST be bind in inherited objects */
 	this.updateTime = function()
 	{
-		var timeString, timeLeft, currentTime = new Date();
+		var timeString;
 
-		if (dateBegin.getTime() > currentTime.getTime())
-			dateBegin.setTime(currentTime.getTime());
-		timeLeft = currentTime.getTime() - dateBegin.getTime();
-		if (timeLeft > this.dateLength.getTime()) // end of game
-		{
-			timeLeft = this.dateLength.getTime();
-			this.endGame();
-		}
-		timeLeft = new Date(this.dateLength.getTime() - timeLeft);
+		dateBegin.setTime(dateBegin.getTime() - 1000);
+
 		if (htmels.elTime)
 		{
-			timeString = (timeLeft.getMinutes() < 10 ? "0" : "") + timeLeft.getMinutes();
+			timeString = (dateBegin.getMinutes() < 10 ? "0" : "") + dateBegin.getMinutes();
 			timeString += ":";
-			timeString += (timeLeft.getSeconds() < 10 ? "0" : "") + timeLeft.getSeconds();
+			timeString += (dateBegin.getSeconds() < 10 ? "0" : "") + dateBegin.getSeconds();
 			htmels.elTime.innerHTML = "TIME: " + timeString;
 		}
+		if (dateBegin.getTime() <= 0) // end of game
+			this.endGame();
 	};
 
 	/** call this function when the game is ready to start (all images loaded...) */
