@@ -131,6 +131,57 @@ function AbstractdGame ()
 			}
 		}
 	};
+	
+	/**
+	 * select the given point
+	 * @param point the point to select
+	 * @param selected if true, we select point, else we deselect it
+	 */
+	this.setSelected = function(point, selected)
+	{
+		var i;
+		const size = this.selectedPoints.length;
+
+		this.grid.setSelected(point, selected);
+		if (selected) // if the point has been selected
+		{
+			if (size === 0
+					|| (size === 1 && Math.abs(point.x - this.selectedPoints[0].x)
+							+ Math.abs(point.y - this.selectedPoints[0].y) === 1)) // if it is next to the last selection
+				this.selectedPoints.push(point);
+			else // otherwise, we clear the selection
+			{
+				this.clearSelection();
+				this.selectedPoints.push(point);
+			}
+		}
+		else // otherwise, we remove the point from the list of selected points
+		{
+			for (i = 0; i < size; i++)
+			{
+				if (this.selectedPoints[i].x === point.x && this.selectedPoints[i].y === point.y)
+				{
+					this.selectedPoints.splice(i, 1);
+					break;
+				}
+			}
+		}
+		if (!this.animating) // if animating is true, a repaint is programmed
+			this.visualGrid.draw();
+	};
+
+	/** Clear the selected points (unselect them) */
+	this.clearSelection = function()
+	{
+		var i;
+		const size = this.selectedPoints.length;
+
+		for (i = 0; i < size; i++)
+			this.grid.setSelected(this.selectedPoints[i], false);
+		this.selectedPoints = [];
+		if (!this.animating) // if animating is true, a repaint is programmed
+			this.visualGrid.draw();
+	};
 
 	/**
 	 * end the game

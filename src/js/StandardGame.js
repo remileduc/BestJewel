@@ -37,7 +37,7 @@ function StandardGame (cxt)
 
 	// these are private functions that create the animations. they are declared here and defined below
 	var startAnimation, validExchange, cascade, endCascade, endAnimation;
-	startAnimation = validExchange = cascade = endCascade = endAnimation = function(){};
+	startAnimation = validExchange = cascade = endCascade = endAnimation = function(){;};
 
 	this.newGame = this.newGame.bind(this);
 	var superNewGame = this.newGame;
@@ -52,7 +52,7 @@ function StandardGame (cxt)
 		context.canvas.removeEventListener("mouseup", this.onMouseUp);
 		context.canvas.removeEventListener("mousemove", this.onMouseMove);
 		context.canvas.addEventListener("mousedown", this.onMouseDown);
-		context.canvas.addEventListener("mouseup", this.onMouseUp);
+		document.addEventListener("mouseup", this.onMouseUp); // in the document to update if the mouse is released out the canvas
 		context.canvas.addEventListener("mousemove", this.onMouseMove);
 		// we start the game
 		this.visualGrid.setPosition(new Point(0, 0));
@@ -72,7 +72,7 @@ function StandardGame (cxt)
 	/** @param e the event */
 	this.onMouseDown = function(e)
 	{
-		var point, i;
+		var point;
 
 		if (e.button === 0) // left button
 		{
@@ -81,32 +81,7 @@ function StandardGame (cxt)
 			{
 				mouseDown = true;
 				this.lastClickedPoint = point;
-				this.grid.setSelected(point, !this.grid.isSelected(point));
-				if (this.grid.isSelected(point)) // if the point has been selected
-				{
-					const size = this.selectedPoints.length;
-					if (size === 0
-							|| (size < 2 && Math.abs(point.x - this.selectedPoints[0].x)
-									+ Math.abs(point.y - this.selectedPoints[0].y) === 1)) // if it is next to the last selection
-						this.selectedPoints.push(point);
-					else // otherwise, we clear the selection
-					{
-						for (i = 0; i < size; i++)
-							this.grid.setSelected(this.selectedPoints[i], false);
-						this.selectedPoints = [];
-						this.selectedPoints.push(point);
-					}
-				}
-				else
-				// otherwise, we remove the point from the list of selected points
-				{
-					if (this.selectedPoints[0].x === point.x && this.selectedPoints[0].y === point.y)
-						this.selectedPoints.shift();
-					else
-						this.selectedPoints.pop();
-				}
-				if (!this.animating) // if animating is true, a repaint is programmed
-					this.visualGrid.draw();
+				this.setSelected(point, !this.grid.isSelected(point));
 			}
 		}
 	};
@@ -119,20 +94,16 @@ function StandardGame (cxt)
 
 		if (mouseDown)
 		{
+			if (!this.grid.isSelected(this.lastClickedPoint))
+				this.setSelected(this.lastClickedPoint, true);
+
 			point = this.visualGrid.convertCoordinates(new Point(e.pageX - this.offsetX, e.pageY - this.offsetY));
 			if (point.x !== -1 && point.y !== -1 && (point.x !== this.lastClickedPoint.x || point.y !== this.lastClickedPoint.y)
 					&& Math.abs(point.x - this.lastClickedPoint.x) + Math.abs(point.y - this.lastClickedPoint.y) === 1)
 			{
-				const size = this.selectedPoints.length;
-				for (i = 0; i < size; i++)
-					this.grid.setSelected(this.selectedPoints[i], false);
-				this.selectedPoints = [];
-				this.grid.setSelected(this.lastClickedPoint, true);
-				this.grid.setSelected(point, true);
-				this.selectedPoints.push(this.lastClickedPoint);
-				this.selectedPoints.push(point);
-				if (!this.animating) // if animating is true, a repaint is programmed
-					this.visualGrid.draw();
+				this.clearSelection();
+				this.setSelected(this.lastClickedPoint, true);
+				this.setSelected(point, true);
 				mouseDown = false; // it's not possible to drag again until we reclick
 				startAnimation();
 			}
@@ -170,27 +141,23 @@ function StandardGame (cxt)
 	 */
 	var removeDiamonds = function(pointsToRemove)
 	{
-		var i, j, sizeS = this.selectedPoints.length, size = this.grid.getSize(), point;
+		var i, j, goone = true;
+		const sizeS = this.selectedPoints.length, size = pointsToRemove.length;
 
 		this.visualGrid.removeDiamond(pointsToRemove);
-		this.updatePoints(pointsToRemove.length);
+		this.updatePoints(size);
 
-		this.selectedPoints = [];
-		for (i = 0; i < size; i++)
+		// if a selected point has been removed, we remove them all!
+		for (i = 0; i < size && goone; i++)
 		{
-			for (j = 0; j < size; j++)
+			for (j = 0; j < sizeS && goone; j++)
 			{
-				point = new Point(i, j);
-				if (this.grid.isSelected(point))
-					this.selectedPoints.push(point);
+				if (this.selectedPoints[j].x === pointsToRemove[i].x && this.selectedPoints[j].y === pointsToRemove[i].y)
+				{
+					this.clearSelection();
+					goone = false;
+				}
 			}
-		}
-		size = this.selectedPoints.length;
-		if (sizeS !== size)
-		{
-			for (i = 0; i < size; i++)
-				this.grid.setSelected(this.selectedPoints[i], false);
-			this.selectedPoints = [];
 		}
 	};
 	removeDiamonds = removeDiamonds.bind(this);
@@ -206,19 +173,12 @@ function StandardGame (cxt)
 				this.animating = true;
 				this.grid.exchange(this.selectedPoints[0], this.selectedPoints[1]);
 				this.visualGrid.exchange(this.selectedPoints[0], this.selectedPoints[1]);
-				this.grid.setSelected(this.selectedPoints[0], false);
-				this.grid.setSelected(this.selectedPoints[1], false);
 				this.lastSelectedPoints = this.selectedPoints; // we save it in case the user select other points, we have a save
-				this.selectedPoints = [];
+				this.clearSelection();
 				validExchange();
 			}
 			else // possibly, after a fall, the selection are not aligned anymore
-			{
-				this.grid.setSelected(this.selectedPoints[0], false);
-				this.grid.setSelected(this.selectedPoints[1], false);
-				this.selectedPoints = [];
-				this.visualGrid.draw();
-			}
+				this.clearSelection();
 		}
 	};
 	startAnimation = startAnimation.bind(this);

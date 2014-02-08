@@ -220,14 +220,13 @@ function VisualGrid (cxt, grille)
 	this.initialize = function()
 	{
 		var i, j, points = [];
-		const size = grid.getSize();
 
 		// we create the diamonds
 		diamonds = [];
-		for (i = 0; i < size; i++)
+		for (i = 0; i < placement.nbRows; i++)
 		{
 			diamonds.push([]);
-			for (j = 0; j < size; j++)
+			for (j = 0; j < placement.nbRows; j++)
 			{
 				diamonds[i].push(null);
 				points.push(new Point(i, j));
@@ -271,7 +270,7 @@ function VisualGrid (cxt, grille)
 			finished = false;
 		else // animation finished
 			percent = 1;
-		
+
 		pos.x = Math.round((points[1].initPos.x - points[0].initPos.x) * percent + points[0].initPos.x); // first point
 		pos.y = Math.round((points[1].initPos.y - points[0].initPos.y) * percent + points[0].initPos.y);
 		diamonds[points[0].gridPos.x][points[0].gridPos.y].setPosition(pos);

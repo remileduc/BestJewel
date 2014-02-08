@@ -57,10 +57,16 @@ button
 
 @media (min-aspect-ratio: 1/1) /* width >= height (landscape) */
 {
-
+section, aside
+{
+	display: inline-block;
+}
 }
 
 @media (max-aspect-ratio: 1/1) /* width <= height (portrait) */
 {
-
+section, aside
+{
+	display: block;
+}
 }
