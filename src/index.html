@@ -31,12 +31,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <section id="main">
 	<canvas id="mainGame" width="600" height="600" tabindex="1">The game cannot be launched on your computer.</canvas>
 </section>
+
+<div id="second">
 <aside id="display">
 	<p id="points">POINTS</p>
 	<p id="moves">MOVES</p>
 	<p id="time">TIME</p>
+</aside>
+<nav id="menu">
+	<p><input type="checkbox" name="isTempo" id="isTempo" checked /><label for="isTempo">Temporized game</label></p>
 	<button type="button" id="help">Show move</button>
-	<button type="button" id="restart">New Game</button>
 	<label for="difficulty">Difficulty: </label>
 	<select name="difficulty" id="difficulty">
 		<option value="TEST">Test</option>
@@ -46,10 +50,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<option value="HARD">Hard</option>
 		<option value="VERYHARD">Very hard</option>
 	</select>
-	<p>
-	<input type="checkbox" name="isTempo" id="isTempo" checked /><label for="isTempo">Temporized game</label>
-	</p>
-</aside>
+	<button type="button" id="restart">New Game</button>
+</nav>
+</div>
 
 	<script src="js/Grid.js"></script>
 	<script src="js/Diamond.js"></script>

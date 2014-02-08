@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>450</x>
+      <y>40</y>
+      <w>641</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>/&lt;header&gt;/
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>770</x>
+      <y>100</y>
+      <w>311</w>
+      <h>131</h>
+    </coordinates>
+    <panel_attributes>*&lt;aside&gt; "display"*
+bg=green</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>770</x>
+      <y>240</y>
+      <w>311</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>*&lt;nav&gt; "menu"*
+bg=green</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>450</x>
+      <y>380</y>
+      <w>641</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>/&lt;footer&gt;/
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>450</x>
+      <y>70</y>
+      <w>301</w>
+      <h>301</h>
+    </coordinates>
+    <panel_attributes>*&lt;section&gt; "main"*
+bg=green</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>760</x>
+      <y>70</y>
+      <w>331</w>
+      <h>301</h>
+    </coordinates>
+    <panel_attributes>/&lt;div&gt; "second"/
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>440</x>
+      <y>10</y>
+      <w>661</w>
+      <h>401</h>
+    </coordinates>
+    <panel_attributes>/&lt;body&gt;/
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>10</x>
+      <y>40</y>
+      <w>411</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>/&lt;header&gt;/
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>20</x>
+      <y>470</y>
+      <w>191</w>
+      <h>101</h>
+    </coordinates>
+    <panel_attributes>*&lt;aside&gt; "display"*
+bg=green</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>220</x>
+      <y>470</y>
+      <w>191</w>
+      <h>101</h>
+    </coordinates>
+    <panel_attributes>*&lt;nav&gt; "menu"*
+bg=green</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>10</x>
+      <y>590</y>
+      <w>411</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>/&lt;footer&gt;/
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>10</x>
+      <y>70</y>
+      <w>411</w>
+      <h>361</h>
+    </coordinates>
+    <panel_attributes>*&lt;section&gt; "main"*
+bg=green</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>10</x>
+      <y>440</y>
+      <w>411</w>
+      <h>141</h>
+    </coordinates>
+    <panel_attributes>/&lt;div&gt; "second"/
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>0</x>
+      <y>10</y>
+      <w>431</w>
+      <h>621</h>
+    </coordinates>
+    <panel_attributes>/&lt;body&gt;/
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+</diagram>

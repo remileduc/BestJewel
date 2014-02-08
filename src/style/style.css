@@ -28,7 +28,7 @@ body
 	padding: 25px;
 }
 
-section, aside
+section, #second
 {
 	display: inline-block;
 	vertical-align: middle;
@@ -36,7 +36,7 @@ section, aside
 	padding: 10px;
 }
 
-aside
+aside, nav
 {
 	margin: 5%;
 }
@@ -57,16 +57,26 @@ button
 
 @media (min-aspect-ratio: 1/1) /* width >= height (landscape) */
 {
-section, aside
-{
-	display: inline-block;
-}
+	section, #second
+	{
+		display: inline-block;
+	}
+
+	aside, nav
+	{
+		display: block;
+	}
 }
 
 @media (max-aspect-ratio: 1/1) /* width <= height (portrait) */
 {
-section, aside
-{
-	display: block;
-}
+section, #second
+	{
+		display: block;
+	}
+
+	aside, nav
+	{
+		display: block;
+	}
 }
