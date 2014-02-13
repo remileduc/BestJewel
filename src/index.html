@@ -105,8 +105,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			button = document.querySelector("#restart");
 			button.addEventListener("click", function() { game.endGame(); game.newGame(true); });
 
-			game.addEventListener("gameReady", function() { game.newGame(); });
+			game.addEventListener("gameReady", function() { if (!game.isRunning()) game.newGame(); });
 			game.addEventListener("gameFinished", function() { alert("game finished"); game.newGame(); });
+			if (!game.isRunning() && game.isReady())
+				game.newGame();
+
 			console.log(Date.now() - date + " ms");
 		//})();
 	</script>

@@ -68,6 +68,10 @@ function AbstractdGame ()
 	this.offsetX = 0, this.offsetY = 0;
 	/** the points gained */
 	var points = 0;
+	/** tells if the game is ready to begin or not */
+	var ready = false;
+	/** tells if the game is running */
+	var running = false;
 	/** the begin date of the game */
 	var dateBegin = new Date(0);
 	/** the id of the function in setInterval */
@@ -93,6 +97,7 @@ function AbstractdGame ()
 		this.updateTime();
 		if (this.isTempo)
 			intervalID = setInterval(this.updateTime, 1000);
+		running = true;
 		fire("gameLaunched");
 	};
 
@@ -196,6 +201,7 @@ function AbstractdGame ()
 			this.animating = false;
 			return;
 		}
+		running = false;
 		fire("gameFinished");
 	};
 
@@ -255,14 +261,15 @@ function AbstractdGame ()
 			htmels.elTime.innerHTML = "TIME: " + timeString;
 		}
 		if (dateBegin.getTime() <= 0) // end of game
-			this.endGame();
+			this.timeout();
 	};
 
 	/** call this function when the game is ready to start (all images loaded...) */
 	this.gameIsReady = function()
 	{
+		ready = true;
 		fire("gameReady");
-	}
+	};
 
 	/**
 	 * compute the values offsetX and offsetY from the given html element
@@ -277,7 +284,7 @@ function AbstractdGame ()
 		marginY = parseInt(pt.paddingTop, 10);
 		this.offsetX = marginX + htmlElement.offsetLeft;
 		this.offsetY = marginY + htmlElement.offsetTop;
-	}
+	};
 
 	// For the events:
 	this.addEventListener = function(type, listener)
@@ -300,6 +307,8 @@ function AbstractdGame ()
 	this.setHTMLPoints = function(htmlpoints) { htmels.elPoints = htmlpoints; };
 	this.setHTMLTime = function(htmltime) { htmels.elTime = htmltime; };
 	this.setHTMLMoves = function(htmlmoves) { htmels.elMoves = htmlmoves; };
+	this.isReady = function() { return ready; };
+	this.isRunning = function() { return running; };
 
 	// private members
 	/**
@@ -319,11 +328,32 @@ function AbstractdGame ()
 	};
 }
 
-/** @param e the event */
+/**
+ * resize the canvas of the game
+ * @param size the new size (it's a square, so just the width ;) )
+ */
+AbstractdGame.prototype.resize = function(size) { this.visualGrid.setSize(size); };
+
+/**
+ * This function is called when timeout
+ * @warning this function must be reimplemented in the subclasses
+ */
+AbstractdGame.prototype.timeout = function() {};
+
+/**
+ * @warning this function must be reimplemented in the subclasses
+ * @param e the event
+ */
 AbstractdGame.prototype.onMouseDown = function(e) {};
 
-/** @param e the event */
+/**
+ * @warning this function must be reimplemented in the subclasses
+ * @param e the event
+ */
 AbstractdGame.prototype.onMouseMove = function(e) {};
 
-/** @param e the event */
+/**
+ * @warning this function must be reimplemented in the subclasses
+ * @param e the event
+ */
 AbstractdGame.prototype.onMouseUp = function (e) {};

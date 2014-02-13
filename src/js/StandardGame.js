@@ -69,7 +69,10 @@ function StandardGame (cxt)
 	};
 	this.newGame = this.newGame.bind(this);
 
-	/** @param e the event */
+	/**
+	 * @param e the event
+	 * @override AbstractGame
+	 */
 	this.onMouseDown = function(e)
 	{
 		var point;
@@ -87,7 +90,10 @@ function StandardGame (cxt)
 	};
 	this.onMouseDown = this.onMouseDown.bind(this);
 
-	/** @param e the event */
+	/**
+	 * @param e the event
+	 * @override AbstractGame
+	 */
 	this.onMouseMove = function(e)
 	{
 		var point, i;
@@ -111,6 +117,7 @@ function StandardGame (cxt)
 	};
 	this.onMouseMove = this.onMouseMove.bind(this);
 
+	/** @override AbstractGame */
 	this.onMouseUp = function (e)
 	{
 		if (e.button === 0) // left button
@@ -133,6 +140,16 @@ function StandardGame (cxt)
 		superEndGame();
 	};
 	this.endGame = this.endGame.bind(this);
+
+	/** @override AbstractGame */
+	this.timeout = function () { this.endGame(); };
+
+	/** @override AbstractGame */
+	this.resize = function(size)
+	{
+		this.computeOffset(context.canvas);
+		this.visualGrid.setSize(size);
+	};
 
 	/**
 	 * ask visualGrid to remove the diamonds and check that there is no selected points in the list. otherwise,

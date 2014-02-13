@@ -137,7 +137,7 @@ function VisualGrid (cxt, grille)
 		var i, j, actualPosition, lineTo, currentPoint = new Point();
 		const size = placement.gridSize, width = placement.rowSize - 2 * appearance.borderWidth;
 
-		if (!framerate)
+		if (!framerate || !animating)
 		{
 			setAnimating(true);
 			framerate = 0;
@@ -243,14 +243,12 @@ function VisualGrid (cxt, grille)
 	 */
 	this.exchange = function(a, b)
 	{
-		var firstTime = false, framerate, percent, points, finished = true, pos = new Point();
+		var framerate, percent, points, finished = true, pos = new Point();
 
 		if (typeof b !== "undefined" && typeof a !== "number") // first time the function is called
 		{
 			if (listActionsBegin.indexOf(this.exchange) >= 0) // the function is already executing
 				return;
-			setAnimating(true);
-			firstTime = true;
 			framerate = 0;
 			actionVars.excPoints.push({ gridPos: a, initPos: diamonds[a.x][a.y].getPosition() });
 			actionVars.excPoints.push({ gridPos: b, initPos: diamonds[b.x][b.y].getPosition() });
@@ -287,7 +285,7 @@ function VisualGrid (cxt, grille)
 			actionVars.excBeginFrame = 0;
 			actionVars.excPoints = [];
 		}
-		if (firstTime) // finally, we call draw if it's the first time the function is called
+		if (!animating) // finally, we call draw if it's the first time the function is called
 			this.draw();
 	};
 
@@ -322,7 +320,7 @@ function VisualGrid (cxt, grille)
 	 */
 	this.populate = function(points)
 	{
-		var i, color, tmpDiamond, depth = [];
+		var i, color, tmpDiamond, depth = [], point = new Point();
 		const size = points.length, rowsize = placement.rowSize;
 		const offsetX = rowsize / 2 + placement.position.x, offsetY = rowsize / 2 + placement.position.y;
 
@@ -334,9 +332,11 @@ function VisualGrid (cxt, grille)
 			if (depth[points[i].y] === 0) // we know that points are srted by depth
 				depth[points[i].y] = points[i].x + 1;
 			color = grid.getColorAt(points[i]);
+			point.x = Math.round(offsetX + points[i].y * rowsize);
+			point.y = Math.round(offsetY + (points[i].x - depth[points[i].y]) * rowsize);
 			tmpDiamond = new Diamonds(color, appearance.diamondImages[color]);
 			tmpDiamond.setSize(placement.celluleSize);
-			tmpDiamond.setPosition(new Point(Math.round(offsetX + points[i].y * rowsize), Math.round(offsetY + (points[i].x - depth[points[i].y]) * rowsize)));
+			tmpDiamond.setPosition(point);
 			diamonds[points[i].x][points[i].y] = tmpDiamond;
 		}
 
@@ -354,7 +354,7 @@ function VisualGrid (cxt, grille)
 	 */
 	this.removeDiamond = function(points)
 	{
-		var i, j, framerate, firstTime = false, finished = true, alpha = 0;
+		var i, j, framerate, finished = true, alpha = 0;
 		var position, sparks, sparkPosition = { pos: new Point(), size: -1 };
 		const size = actionVars.rmPoints.length;
 
@@ -362,8 +362,6 @@ function VisualGrid (cxt, grille)
 		{
 			if (listActionsEnd.indexOf(this.removeDiamond) >= 0) // the function is already executing
 				return;
-			setAnimating(true);
-			firstTime = true;
 			framerate = 0;
 			actionVars.rmPoints = points;
 			listActionsEnd.push(this.removeDiamond); // we add the function in the list of actions
@@ -417,7 +415,7 @@ function VisualGrid (cxt, grille)
 			actionVars.rmPoints = [];
 			listActionsEnd.splice(listActionsEnd.indexOf(this.removeDiamond), 1);
 		}
-		if (firstTime) // finally, we call draw if it's the first time the function is called
+		if (!animating) // finally, we call draw if it's the first time the function is called
 			this.draw();
 	};
 
@@ -481,18 +479,51 @@ function VisualGrid (cxt, grille)
 		}
 	};
 
+	/** update the appearance of the grid after a change of size, border, nbRows... */
+	var updateGraphics = function()
+	{
+		var i, j, point = new Point();
+
+		if (typeof placement.gridSize !== "undefined")
+		{
+			this.animationSpeed = placement.gridSize * 0.75;
+			if (typeof placement.nbRows !== "undefined" && placement.nbRows > 0)
+			{
+				placement.rowSize = Math.round(placement.gridSize / placement.nbRows);
+				placement.celluleSize = Math.round((placement.rowSize - appearance.borderWidth) * 0.9);
+			}
+		}
+		// we update all the diamonds
+		if (diamonds.length !== 0)
+		{
+			const offsetX = placement.rowSize / 2 + placement.position.x;
+			const offsetY = placement.rowSize / 2 + placement.position.y;
+
+			for (i = 0; i < placement.nbRows; i++)
+			{
+				for (j = 0; j < placement.nbRows; j++)
+				{
+					if (diamonds[i][j] !== null)
+					{
+						diamonds[i][j].setSize(placement.celluleSize);
+						point.x = Math.round(offsetX + j * placement.rowSize);
+						point.y = Math.round(offsetY + i * placement.rowSize);
+						diamonds[i][j].setPosition(point);
+					}
+				}
+			}
+			if (!animating)
+				this.draw();
+		}
+	};
+
 	/** @return the size of the visual grid */
 	this.getSize = function() { return placement.gridSize; };
 	/** @param size the new size of the grid (in appearance) */
 	this.setSize = function(size)
 	{
 		placement.gridSize = size;
-		this.animationSpeed = size * 0.75;
-		if (placement.nbRows)
-		{
-			placement.rowSize = Math.round(size / placement.nbRows);
-			placement.celluleSize = Math.round((placement.rowSize - appearance.borderWidth) * 0.9);
-		}
+		updateGraphics();
 	};
 
 	/** @return the number of elements per rows */
@@ -501,14 +532,17 @@ function VisualGrid (cxt, grille)
 	this.setNbRows = function(nb)
 	{
 		placement.nbRows = nb;
-		placement.rowSize = Math.round(placement.gridSize / placement.nbRows);
-		placement.celluleSize = Math.round((placement.rowSize - appearance.borderWidth) * 0.9);
+		updateGraphics();
 	};
 
-	/** @return the position of the grid in the canvas */
+	/** @return the position of the grid in the canvas, a Point */
 	this.getPosition = function() { return placement.position; };
-	/** @param position the position of the grid in the canvas */
-	this.setPosition = function(position) { placement.position = position; };
+	/** @param position the position of the grid in the canvas, a Point */
+	this.setPosition = function(position)
+	{
+		placement.position = position;
+		updateGraphics();
+	};
 
 	/** @return the border width */
 	this.getBorderWidth = function() { return appearance.borderWidth; };
@@ -516,7 +550,7 @@ function VisualGrid (cxt, grille)
 	this.setBorderWidth = function(width)
 	{
 		appearance.borderWidth = width;
-		placement.celluleSize = Math.round((placement.rowSize - appearance.borderWidth) * 0.9);
+		updateGraphics();
 	};
 
 	/** @return the border color */
@@ -538,4 +572,5 @@ function VisualGrid (cxt, grille)
 	this.exchange = this.exchange.bind(this);
 	setAnimating = setAnimating.bind(this);
 	this.removeDiamond = this.removeDiamond.bind(this);
+	updateGraphics = updateGraphics.bind(this);
 }
