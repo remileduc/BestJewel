@@ -1,6 +1,6 @@
 /*
 BEST JEWEL is a jewel game with multiple mods.
-Copyright © 2013 Rémi DUCCESCHI
+Copyright © 2013 - 2014 Rémi DUCCESCHI
 remi.ducceschi@gmail.com
 
 This file is part of Best Jewel.

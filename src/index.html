@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
 BEST JEWEL is a jewel game with multiple mods.
-Copyright © 2013 Rémi DUCCESCHI
+Copyright © 2013 - 2014 Rémi DUCCESCHI
 remi.ducceschi@gmail.com
 
 This file is part of Best Jewel.
@@ -28,8 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <link rel="stylesheet" href="style/style.css" />
 </head>
 <body>
+<header>The BestJewel!</header>
+<div id="content">
 <section id="main">
-	<canvas id="mainGame" width="600" height="600" tabindex="1">The game cannot be launched on your computer.</canvas>
+<!-- 	<canvas id="mainGame" width="600" height="600" tabindex="1">The game cannot be launched on your computer.</canvas> -->
 </section>
 
 <div id="second">
@@ -52,7 +54,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	</select>
 	<button type="button" id="restart">New Game</button>
 </nav>
-</div>
+</div><!-- second -->
+</div><!-- content -->
+<footer>Copyright © 2013 - 2014 Rémi DUCCESCHI</footer>
 
 	<script src="js/Grid.js"></script>
 	<script src="js/Diamond.js"></script>
@@ -60,32 +64,41 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<script src="js/AbstractGame.js"></script>
 	<script src="js/StandardGame.js"></script>
 	<script>
-		//(function()
-		//{
+		(function()
+		{"use strict";
 			var date = new Date(), game, context, button, list, check;
-			var canvas = document.querySelector("#mainGame");
-			if (!canvas)
+			var canvas = document.createElement("canvas"), sec = document.querySelector("#main");
+			canvas.appendChild(document.createTextNode("Sorry, the game cannot be launched on your computer."));
+			if (window.innerWidth > window.innerHeight) // landscape
 			{
-				alert("Impossible de récupérer le canvas");
-				//return;
+				canvas.width = Math.floor(sec.offsetHeight * 0.93);
+				canvas.height = Math.floor(sec.offsetHeight * 0.93);
 			}
+			else // portrait
+			{
+				canvas.width = Math.floor(sec.offsetWidth * 0.94);
+				canvas.height = Math.floor(sec.offsetWidth * 0.94);
+			}
+			canvas.style.background = "url(style/images/background2.png) no-repeat center";
+			canvas.style.backgroundSize = "100% 100%";
+			canvas.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+			sec.appendChild(canvas);
+
 			context = canvas.getContext("2d");
 			if (!context)
 			{
 				alert("Impossible de récupérer le context");
-				//return;
+				return;
 			}
 
-			canvas.addEventListener("contextmenu", function(e) { e.preventDefault(); });
-
-			canvas.style.background = "url(style/images/background2.png) no-repeat center";
-			canvas.style.backgroundSize = "100% 100%";
 			game = new StandardGame(context);
 			game.difficulty = DIFFICULTY.INTERMEDIATE;
 			game.isTempo = true;
 			game.setHTMLPoints(document.querySelector("#points"));
 			game.setHTMLMoves(document.querySelector("#moves"));
 			game.setHTMLTime(document.querySelector("#time"));
+			game.addEventListener("gameReady", function() { if (!game.isRunning()) game.newGame(); });
+			game.addEventListener("gameFinished", function() { alert("game finished"); game.newGame(); });
 
 			list = document.querySelector("#difficulty");
 			list.addEventListener("change", function() {
@@ -105,13 +118,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			button = document.querySelector("#restart");
 			button.addEventListener("click", function() { game.endGame(); game.newGame(true); });
 
-			game.addEventListener("gameReady", function() { if (!game.isRunning()) game.newGame(); });
-			game.addEventListener("gameFinished", function() { alert("game finished"); game.newGame(); });
+			window.addEventListener("resize", function() {
+				if (window.innerWidth > window.innerHeight) // landscape
+				{
+					game.resize(Math.floor(sec.offsetHeight * 0.93));
+				}
+				else // portrait
+				{
+					game.resize(Math.floor(sec.offsetWidth * 0.94));
+				}
+			});
+
 			if (!game.isRunning() && game.isReady())
 				game.newGame();
 
 			console.log(Date.now() - date + " ms");
-		//})();
+		})();
 	</script>
 </body>
 </html>

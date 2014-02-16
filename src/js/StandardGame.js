@@ -1,6 +1,6 @@
 /*
 BEST JEWEL is a jewel game with multiple mods.
-Copyright © 2013 Rémi DUCCESCHI
+Copyright © 2013 - 2014 Rémi DUCCESCHI
 remi.ducceschi@gmail.com
 
 This file is part of Best Jewel.
@@ -147,6 +147,9 @@ function StandardGame (cxt)
 	/** @override AbstractGame */
 	this.resize = function(size)
 	{
+		console.log(size);
+		context.canvas.width = size;
+		context.canvas.height = size;
 		this.computeOffset(context.canvas);
 		this.visualGrid.setSize(size);
 	};
