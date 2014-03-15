@@ -340,20 +340,132 @@ AbstractdGame.prototype.resize = function(size) { this.visualGrid.setSize(size);
  */
 AbstractdGame.prototype.timeout = function() {};
 
-/**
- * @warning this function must be reimplemented in the subclasses
- * @param e the event
- */
-AbstractdGame.prototype.onMouseDown = function(e) {};
+	// TO HANDLE EVENTS
 
 /**
+ * Action executed when the mouse is pressed, or when we touch the screen
  * @warning this function must be reimplemented in the subclasses
- * @param e the event
+ * @param pagePoint a Point representing the attribute pageX et pageY of the event
  */
-AbstractdGame.prototype.onMouseMove = function(e) {};
+AbstractdGame.prototype.onDown = function(pagePoint) {};
 
 /**
+ * Action executed when we do a drag&drop
  * @warning this function must be reimplemented in the subclasses
+ * @param pagePoint a Point representing the attribute pageX et pageY of the event
+ */
+AbstractdGame.prototype.onMove = function(pagePoint) {};
+
+/**
+ * action executed when the mouse is released, or when we stop touching the screen
+ * @warning this function must be reimplemented in the subclasses
+ * @param pagePoint a Point representing the attribute pageX et pageY of the event
+ */
+AbstractdGame.prototype.onUp = function(pagePoint) {};
+
+/**
+ * action executed when a drag&drop have to be canceled
+ * @warning this function must be reimplemented in the subclasses
+ */
+AbstractdGame.prototype.onCancel = function() {};
+
+	// MOUSE EVENTS
+
+/**
+ * @warning you must this function to this
  * @param e the event
  */
-AbstractdGame.prototype.onMouseUp = function (e) {};
+AbstractdGame.prototype.onMouseDown = function(e)
+{
+	if (e.buttons === 1) // left button
+		this.onDown(new Point(e.pageX, e.pageY));
+};
+
+/**
+ * @warning you must this function to this
+ * @param e the event
+ */
+AbstractdGame.prototype.onMouseMove = function(e)
+{
+	if (e.buttons === 1) // left button
+		this.onMove(new Point(e.pageX, e.pageY));
+};
+
+/**
+ * @warning you must this function to this
+ * @param e the event
+ */
+AbstractdGame.prototype.onMouseUp = function (e)
+{
+	if (e.buttons === 1) // left button
+		this.onUp(new Point(e.pageX, e.pageY));
+};
+
+/**
+ * @warning you must this function to this
+ * @param e the event
+ */
+AbstractdGame.prototype.onMouseOut = function (e)
+{
+	if (e.buttons === 1) // left button
+		this.onCancel();
+};
+
+	// TOUCH EVENTS
+
+/**
+ * @warning you must this function to this
+ * @param e the event
+ */
+AbstractdGame.prototype.onTouchStart = function (e)
+{
+	if (e.touches.length == 1)
+	{
+		e.preventDefault();
+		this.onDown(new Point(e.touches[0].pageX, e.touches[0].pageY));
+	}
+};
+
+/**
+ * @warning you must this function to this
+ * @param e the event
+ */
+AbstractdGame.prototype.onTouchEnd = function (e)
+{
+	if (e.touches.length == 0)
+		this.onUp(new Point());
+};
+
+/**
+ * @warning you must this function to this
+ * @param e the event
+ */
+AbstractdGame.prototype.onTouchMove = function (e)
+{
+	if (e.touches.length == 1)
+	{
+		e.preventDefault();
+		this.onMove(new Point(e.touches[0].pageX, e.touches[0].pageY));
+	}
+};
+
+/**
+ * @warning you must this function to this
+ * @param e the event
+ */
+AbstractdGame.prototype.onTouchLeave = function (e)
+{
+	if (e.touches.length == 1)
+		this.onCancel();
+};
+
+/**
+ * @warning you must this function to this
+ * @param e the event
+ */
+AbstractdGame.prototype.onTouchCancel = function (e)
+{
+	this.onCancel();
+};
+
+

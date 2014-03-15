@@ -47,14 +47,32 @@ function StandardGame (cxt)
 		this.updateMoves();
 		this.grid = new Grid(this.difficulty.gridSize, this.difficulty.nbColor);
 		this.visualGrid = new VisualGrid(context, this.grid);
-		// we enable the listeners
+		/* LISTENERS */
+			// we remove them
+				// mouse
 		context.canvas.removeEventListener("mousedown", this.onMouseDown);
-		context.canvas.removeEventListener("mouseup", this.onMouseUp);
+		document.removeEventListener("mouseup", this.onMouseUp);
 		context.canvas.removeEventListener("mousemove", this.onMouseMove);
+		context.canvas.removeEventListener("mouseout", this.onMouseOut);
+				// touchscreen
+		context.canvas.removeEventListener("touchstart", this.onTouchStart);
+		document.removeEventListener("touchend", this.onTouchEnd);
+		context.canvas.removeEventListener("touchmove", this.onTouchMove);
+		context.canvas.removeEventListener("touchleave", this.onTouchLeave);
+		context.canvas.removeEventListener("touchcancel", this.onTouchCancel);
+			// we add them
+				// mouse
 		context.canvas.addEventListener("mousedown", this.onMouseDown);
 		document.addEventListener("mouseup", this.onMouseUp); // in the document to update if the mouse is released out the canvas
 		context.canvas.addEventListener("mousemove", this.onMouseMove);
-		// we start the game
+		context.canvas.addEventListener("mouseout", this.onMouseOut);
+				// touchscreen
+		context.canvas.addEventListener("touchstart", this.onTouchStart);
+		document.addEventListener("touchend", this.onTouchEnd);
+		context.canvas.addEventListener("touchmove", this.onTouchMove);
+		context.canvas.addEventListener("touchleave", this.onTouchLeave);
+		context.canvas.addEventListener("touchcancel", this.onTouchCancel);
+		/* WE START THE GAME */
 		this.visualGrid.setPosition(new Point(0, 0));
 		this.visualGrid.setSize(Math.min(context.canvas.width, context.canvas.height));
 		this.visualGrid.setNbRows(this.difficulty.gridSize);
@@ -70,40 +88,40 @@ function StandardGame (cxt)
 	this.newGame = this.newGame.bind(this);
 
 	/**
-	 * @param e the event
+	 * @param pagePoint a Point representing the attribute pageX et pageY of the event
 	 * @override AbstractGame
 	 */
-	this.onMouseDown = function(e)
+	this.onDown = function(pagePoint)
 	{
-		var point;
+		var point = pagePoint;
+		point.x -= this.offsetX;
+		point.y -= this.offsetY;
 
-		if (e.button === 0) // left button
+		point = this.visualGrid.convertCoordinates(point);
+		if (point.x !== -1 && point.y !== -1) // if we click on a diamond
 		{
-			point = this.visualGrid.convertCoordinates(new Point(e.pageX - this.offsetX, e.pageY - this.offsetY));
-			if (point.x !== -1 && point.y !== -1) // if we click on a diamond
-			{
-				mouseDown = true;
-				this.lastClickedPoint = point;
-				this.setSelected(point, !this.grid.isSelected(point));
-			}
+			mouseDown = true;
+			this.lastClickedPoint = point;
+			this.setSelected(point, !this.grid.isSelected(point));
 		}
 	};
-	this.onMouseDown = this.onMouseDown.bind(this);
 
 	/**
-	 * @param e the event
+	 * @param pagePoint a Point representing the attribute pageX et pageY of the event
 	 * @override AbstractGame
 	 */
-	this.onMouseMove = function(e)
+	this.onMove = function(pagePoint)
 	{
-		var point, i;
+		var point = pagePoint, i;
+		point.x -= this.offsetX;
+		point.y -= this.offsetY;
 
 		if (mouseDown)
 		{
 			if (!this.grid.isSelected(this.lastClickedPoint))
 				this.setSelected(this.lastClickedPoint, true);
 
-			point = this.visualGrid.convertCoordinates(new Point(e.pageX - this.offsetX, e.pageY - this.offsetY));
+			point = this.visualGrid.convertCoordinates(point);
 			if (point.x !== -1 && point.y !== -1 && (point.x !== this.lastClickedPoint.x || point.y !== this.lastClickedPoint.y)
 					&& Math.abs(point.x - this.lastClickedPoint.x) + Math.abs(point.y - this.lastClickedPoint.y) === 1)
 			{
@@ -115,19 +133,25 @@ function StandardGame (cxt)
 			}
 		}
 	};
-	this.onMouseMove = this.onMouseMove.bind(this);
 
-	/** @override AbstractGame */
-	this.onMouseUp = function (e)
+	/**
+	 * @param pagePoint a Point representing the attribute pageX et pageY of the event
+	 * @override AbstractGame
+	 */
+	this.onUp = function (pagePoint)
 	{
-		if (e.button === 0) // left button
-		{
-			mouseDown = false;
-			if (this.selectedPoints.length === 2)
-				startAnimation();
-		}
+		mouseDown = false;
+		if (this.selectedPoints.length === 2)
+			startAnimation();
 	};
-	this.onMouseUp = this.onMouseUp.bind(this);
+
+	/**
+	 * @override AbstractGame
+	 */
+	this.onCancel = function ()
+	{
+		mouseDown = false;
+	};
 
 	this.endGame = this.endGame.bind(this);
 	var superEndGame = this.endGame;
@@ -147,11 +171,11 @@ function StandardGame (cxt)
 	/** @override AbstractGame */
 	this.resize = function(size)
 	{
-		console.log(size);
 		context.canvas.width = size;
 		context.canvas.height = size;
 		this.computeOffset(context.canvas);
-		this.visualGrid.setSize(size);
+		if (this.visualGrid !== null)
+			this.visualGrid.setSize(size);
 	};
 
 	/**
@@ -320,6 +344,15 @@ function StandardGame (cxt)
 	// we bind the inherited methods
 	this.findMove = this.findMove.bind(this);
 	this.updateTime = this.updateTime.bind(this);
+	this.onMouseDown = this.onMouseDown.bind(this);
+	this.onMouseUp = this.onMouseUp.bind(this);
+	this.onMouseMove = this.onMouseMove.bind(this);
+	this.onMouseOut = this.onMouseOut.bind(this);
+	this.onTouchStart = this.onTouchStart.bind(this);
+	this.onTouchEnd = this.onTouchEnd.bind(this);
+	this.onTouchMove = this.onTouchMove.bind(this);
+	this.onTouchCancel = this.onTouchCancel.bind(this);
+	this.onTouchLeave = this.onTouchLeave.bind(this);
 	// we initialize the offsets
 	this.computeOffset(context.canvas);
 	// we set the images
