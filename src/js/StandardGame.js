@@ -76,8 +76,8 @@ function StandardGame (cxt)
 		this.visualGrid.setPosition(new Point(0, 0));
 		this.visualGrid.setSize(Math.min(context.canvas.width, context.canvas.height));
 		this.visualGrid.setNbRows(this.difficulty.gridSize);
-		this.visualGrid.setBorderWidth(2);
-		this.visualGrid.setBorderColor("rgba(255, 255, 255, 0)");
+		this.visualGrid.setBorderWidth(0);
+		this.visualGrid.setBorderColor("rgba(255, 255, 255, 0)"); // transparent
 		this.visualGrid.setDiamondImages(this.diamondImages);
 		this.visualGrid.initialize();
 		this.updateMoves(this.grid.findMoves());

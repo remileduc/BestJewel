@@ -65,13 +65,13 @@ section, #menus
 
 section
 {
-	flex-grow: 0;
+	flex-grow: 1;
 	background-color: blue;
 }
 
 #menus
 {
-	flex-grow: 1;
+	flex-grow: 0;
 	display: flex;
 	flex-flow: column;
 }

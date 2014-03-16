@@ -69,16 +69,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			var date = new Date(), game, context, button, list, check;
 			var canvas = document.createElement("canvas"), sec = document.querySelector("#main");
 			canvas.appendChild(document.createTextNode("Sorry, the game cannot be launched on your computer."));
-			if (window.innerWidth > window.innerHeight) // landscape
-			{
-				canvas.width = Math.floor(sec.offsetHeight);
-				canvas.height = Math.floor(sec.offsetHeight);
-			}
-			else // portrait
-			{
-				canvas.width = Math.floor(sec.offsetWidth);
-				canvas.height = Math.floor(sec.offsetWidth);
-			}
+			canvas.width = Math.min(sec.offsetHeight, sec.offsetWidth);
+			canvas.height = canvas.width;
 			canvas.style.background = "url(style/images/background2.png) no-repeat center";
 			canvas.style.backgroundSize = "100% 100%";
 			canvas.addEventListener("contextmenu", function(e) { e.preventDefault(); });
@@ -119,18 +111,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			button.addEventListener("click", function() { game.endGame(); game.newGame(true); });
 
 			window.addEventListener("resize", function() {
-				if (window.innerWidth > window.innerHeight) // landscape
+				var size = Math.min(sec.offsetWidth, sec.offsetHeight);
+
+				do
 				{
-					game.resize(Math.floor(sec.offsetHeight));
-					while (canvas.width > sec.offsetWidth + 5)
-						game.resize(Math.floor(sec.offsetWidth));
-				}
-				else // portrait
-				{
-					game.resize(Math.floor(sec.offsetWidth));
-					while (canvas.width > sec.offsetHeight + 5)
-						game.resize(Math.floor(sec.offsetHeight));
-				}
+					game.resize(size);
+					size = Math.min(sec.offsetWidth, sec.offsetHeight);
+				} while (canvas.height > size);
 			});
 
 			if (!game.isRunning() && game.isReady())

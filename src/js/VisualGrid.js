@@ -44,7 +44,7 @@ function VisualGrid (cxt, grille)
 	};
 	/** meta object that contains all the appearance elements */
 	const appearance = {
-			borderWidth: 0,
+			borderWidth: 0, /** width between 2 items  */
 			borderColor: "black",
 			diamondImages: ["blue", "green", "lime", "maroon", "purple", "silver", "fuchsia"] /** the list of diamond representations */
 	};
