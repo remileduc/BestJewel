@@ -28,19 +28,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <link rel="stylesheet" href="style/style.css" />
 </head>
 <body>
-<header>The BestJewel!</header>
-<div id="content">
-<section id="main">
+<header class="uneditable">The BestJewel!</header>
+<div id="content" class="uneditable">
+<section id="main" class="editable">
 <!-- 	<canvas id="mainGame" width="600" height="600" tabindex="1">The game cannot be launched on your computer.</canvas> -->
 </section>
 
-<div id="second">
-<aside id="display">
+<div id="menus" class="uneditable">
+<aside id="display" class="editable">
 	<p id="points">POINTS</p>
 	<p id="moves">MOVES</p>
 	<p id="time">TIME</p>
 </aside>
-<nav id="menu">
+<nav id="menu" class="editable">
 	<p><input type="checkbox" name="isTempo" id="isTempo" checked /><label for="isTempo">Temporized game</label></p>
 	<button type="button" id="help">Show move</button>
 	<label for="difficulty">Difficulty: </label>
@@ -54,9 +54,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	</select>
 	<button type="button" id="restart">New Game</button>
 </nav>
-</div><!-- second -->
+</div><!-- menus -->
 </div><!-- content -->
-<footer>Copyright © 2013 - 2014 Rémi DUCCESCHI</footer>
+<footer class="uneditable">Copyright © 2013 - 2014 Rémi DUCCESCHI</footer>
 
 	<script src="js/Grid.js"></script>
 	<script src="js/Diamond.js"></script>
@@ -64,20 +64,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<script src="js/AbstractGame.js"></script>
 	<script src="js/StandardGame.js"></script>
 	<script>
-		(function()
-		{"use strict";
+//		(function()
+//		{"use strict";
 			var date = new Date(), game, context, button, list, check;
 			var canvas = document.createElement("canvas"), sec = document.querySelector("#main");
 			canvas.appendChild(document.createTextNode("Sorry, the game cannot be launched on your computer."));
 			if (window.innerWidth > window.innerHeight) // landscape
 			{
-				canvas.width = Math.floor(sec.offsetHeight * 0.93);
-				canvas.height = Math.floor(sec.offsetHeight * 0.93);
+				canvas.width = Math.floor(sec.offsetHeight);
+				canvas.height = Math.floor(sec.offsetHeight);
 			}
 			else // portrait
 			{
-				canvas.width = Math.floor(sec.offsetWidth * 0.94);
-				canvas.height = Math.floor(sec.offsetWidth * 0.94);
+				canvas.width = Math.floor(sec.offsetWidth);
+				canvas.height = Math.floor(sec.offsetWidth);
 			}
 			canvas.style.background = "url(style/images/background2.png) no-repeat center";
 			canvas.style.backgroundSize = "100% 100%";
@@ -88,7 +88,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			if (!context)
 			{
 				alert("Impossible de récupérer le context");
-				return;
+//				return;
 			}
 
 			game = new StandardGame(context);
@@ -121,11 +121,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			window.addEventListener("resize", function() {
 				if (window.innerWidth > window.innerHeight) // landscape
 				{
-					game.resize(Math.floor(sec.offsetHeight * 0.93));
+					game.resize(Math.floor(sec.offsetHeight));
+					while (canvas.width > sec.offsetWidth + 5)
+						game.resize(Math.floor(sec.offsetWidth));
 				}
 				else // portrait
 				{
-					game.resize(Math.floor(sec.offsetWidth * 0.94));
+					game.resize(Math.floor(sec.offsetWidth));
+					while (canvas.width > sec.offsetHeight + 5)
+						game.resize(Math.floor(sec.offsetHeight));
 				}
 			});
 
@@ -133,7 +137,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				game.newGame();
 
 			console.log(Date.now() - date + " ms");
-		})();
+//		})();
 	</script>
 </body>
 </html>

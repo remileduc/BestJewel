@@ -22,59 +22,68 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 html, body
 {
 	height: 100%;
-	overflow: auto;
 	margin: 0;
 	padding: 0;
 }
 
 body
 {
+	display: flex;
+	flex-flow: column;
 	background-color: black;
 	color: #CCC;
 }
 
 header, footer
 {
-	height: 5%;
-	width: 85%;
-	margin: auto;
+	flex-grow: 0;
 	text-align: center;
 	background-color: green;
 }
 
+header
+{
+	margin-bottom: 1%;
+}
+
 footer
 {
-	clear: both;
-	position: relative;
-	height: 3em;
-	margin-top: -3em;
+	margin-top: 1%;
 }
 
 #content
 {
-	height: 95%;
+	flex-grow: 1;
+	display: flex;
+	flex-flow: row;
 }
 
-section, #second
+section, #menus
 {
-	display: inline-block;
 	vertical-align: middle;
 }
 
 section
 {
-	overflow: hidden;
+	flex-grow: 0;
 	background-color: blue;
+}
+
+#menus
+{
+	flex-grow: 1;
+	display: flex;
+	flex-flow: column;
 }
 
 aside, nav
 {
-	padding: 5%;
+	padding: 1%;
 }
 
-canvas
+aside
 {
-	padding: 3%;
+	flex-grow: 1;
 }
 
 button
@@ -85,32 +94,40 @@ button
 
 @media (min-aspect-ratio: 1/1) /* width >= height (landscape) */
 {
-	section, #second
+	body
 	{
-		display: inline-block;
+		flex-flow: column;
 	}
 
-	section
+	#content
 	{
-		height: 90%;
+		flex-flow: row;
 	}
 
-	aside, nav
+	#menus
 	{
-		display: block;
+		flex-flow: column;
+		margin: 0;
+		margin-left: 1%;
+		margin-right: 1%;
 	}
 }
 
 @media (max-aspect-ratio: 1/1) /* width <= height (portrait) */
 {
-	section, #second
+	body
 	{
-		display: block;
-		height: auto;
+		flex-flow: column;
 	}
 
-	aside, nav
+	#content
 	{
-		display: inline-block;
+		flex-flow: column;
+	}
+
+	#menus
+	{
+		flex-flow: row;
+		margin: 0;
 	}
 }

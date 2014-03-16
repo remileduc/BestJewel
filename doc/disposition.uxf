@@ -4,12 +4,13 @@
   <element>
     <type>CustomElementImpl</type>
     <coordinates>
-      <x>450</x>
-      <y>40</y>
-      <w>641</w>
-      <h>21</h>
+      <x>510</x>
+      <y>490</y>
+      <w>251</w>
+      <h>41</h>
     </coordinates>
-    <panel_attributes>/&lt;header&gt;/
+    <panel_attributes>/&lt;header&gt; .uneditable/
+flex-grow: 0; order: 0;
 bg=#3c7a00</panel_attributes>
     <additional_attributes/>
     <custom_code>int y=textHeight();
@@ -23,12 +24,13 @@ for(String textline : textlines) {
   <element>
     <type>CustomElementImpl</type>
     <coordinates>
-      <x>770</x>
-      <y>100</y>
-      <w>311</w>
-      <h>131</h>
+      <x>520</x>
+      <y>600</y>
+      <w>231</w>
+      <h>41</h>
     </coordinates>
-    <panel_attributes>*&lt;aside&gt; "display"*
+    <panel_attributes>*&lt;aside&gt; #display .editable*
+flex-grow: 1;
 bg=green</panel_attributes>
     <additional_attributes/>
     <custom_code>int y=textHeight();
@@ -42,12 +44,13 @@ for(String textline : textlines) {
   <element>
     <type>CustomElementImpl</type>
     <coordinates>
-      <x>770</x>
-      <y>240</y>
-      <w>311</w>
-      <h>121</h>
+      <x>520</x>
+      <y>650</y>
+      <w>231</w>
+      <h>41</h>
     </coordinates>
-    <panel_attributes>*&lt;nav&gt; "menu"*
+    <panel_attributes>*&lt;nav&gt; #menu .editable*
+flex-grow: 0;
 bg=green</panel_attributes>
     <additional_attributes/>
     <custom_code>int y=textHeight();
@@ -61,12 +64,13 @@ for(String textline : textlines) {
   <element>
     <type>CustomElementImpl</type>
     <coordinates>
-      <x>450</x>
-      <y>380</y>
-      <w>641</w>
-      <h>21</h>
+      <x>510</x>
+      <y>710</y>
+      <w>251</w>
+      <h>41</h>
     </coordinates>
-    <panel_attributes>/&lt;footer&gt;/
+    <panel_attributes>/&lt;footer&gt; .uneditable/
+flex-grow: 0;
 bg=#3c7a00</panel_attributes>
     <additional_attributes/>
     <custom_code>int y=textHeight();
@@ -80,31 +84,35 @@ for(String textline : textlines) {
   <element>
     <type>CustomElementImpl</type>
     <coordinates>
-      <x>450</x>
-      <y>70</y>
-      <w>301</w>
-      <h>301</h>
-    </coordinates>
-    <panel_attributes>*&lt;section&gt; "main"*
-bg=green</panel_attributes>
-    <additional_attributes/>
-    <custom_code>int y=textHeight();
-
-drawRectangleRound(0,0,width,height,20,20);
-
-for(String textline : textlines) {
-	y += printLeft(textline,y);
-}</custom_code>
-  </element>
-  <element>
-    <type>CustomElementImpl</type>
-    <coordinates>
-      <x>760</x>
-      <y>70</y>
+      <x>780</x>
+      <y>430</y>
       <w>331</w>
-      <h>301</h>
+      <h>331</h>
     </coordinates>
-    <panel_attributes>/&lt;div&gt; "second"/
+    <panel_attributes>*&lt;section&gt; #main .editable*
+flex-grow: 0;
+order: 0; OR order: 1;
+bg=green</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>510</x>
+      <y>540</y>
+      <w>251</w>
+      <h>161</h>
+    </coordinates>
+    <panel_attributes>/&lt;div&gt; #menus .uneditable/
+flex-grow: 1; order: 20
+_flew-flow: column;_
 bg=#3c7a00</panel_attributes>
     <additional_attributes/>
     <custom_code>int y=textHeight();
@@ -118,12 +126,14 @@ for(String textline : textlines) {
   <element>
     <type>CustomElementImpl</type>
     <coordinates>
-      <x>440</x>
-      <y>10</y>
-      <w>661</w>
-      <h>401</h>
+      <x>500</x>
+      <y>430</y>
+      <w>271</w>
+      <h>331</h>
     </coordinates>
-    <panel_attributes>/&lt;body&gt;/
+    <panel_attributes>/&lt;div&gt; #content .uneditable/
+flex-grow: 1;
+_flew-flow: column;_
 bg=#3c7a00</panel_attributes>
     <additional_attributes/>
     <custom_code>int y=textHeight();
@@ -139,10 +149,71 @@ for(String textline : textlines) {
     <coordinates>
       <x>10</x>
       <y>40</y>
-      <w>411</w>
-      <h>21</h>
+      <w>461</w>
+      <h>41</h>
     </coordinates>
-    <panel_attributes>/&lt;header&gt;/
+    <panel_attributes>/&lt;header&gt; .uneditable/
+flex-grow: 0;
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>30</x>
+      <y>600</y>
+      <w>221</w>
+      <h>41</h>
+    </coordinates>
+    <panel_attributes>*&lt;aside&gt; #display .editable*
+flex-grow: 1;
+bg=green</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>260</x>
+      <y>600</y>
+      <w>191</w>
+      <h>41</h>
+    </coordinates>
+    <panel_attributes>*&lt;nav&gt; #menu .editable*
+flex-grow: 0;
+bg=green</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>10</x>
+      <y>670</y>
+      <w>461</w>
+      <h>41</h>
+    </coordinates>
+    <panel_attributes>/&lt;footer&gt; .uneditable/
+flex-grow: 0;
 bg=#3c7a00</panel_attributes>
     <additional_attributes/>
     <custom_code>int y=textHeight();
@@ -157,11 +228,13 @@ for(String textline : textlines) {
     <type>CustomElementImpl</type>
     <coordinates>
       <x>20</x>
-      <y>470</y>
-      <w>191</w>
-      <h>101</h>
+      <y>150</y>
+      <w>441</w>
+      <h>381</h>
     </coordinates>
-    <panel_attributes>*&lt;aside&gt; "display"*
+    <panel_attributes>*&lt;section&gt; #main .editable*
+flex-grow: 0;
+order: 0; OR order: 1; (swap place with #menus)
 bg=green</panel_attributes>
     <additional_attributes/>
     <custom_code>int y=textHeight();
@@ -175,31 +248,14 @@ for(String textline : textlines) {
   <element>
     <type>CustomElementImpl</type>
     <coordinates>
-      <x>220</x>
-      <y>470</y>
-      <w>191</w>
-      <h>101</h>
+      <x>20</x>
+      <y>540</y>
+      <w>441</w>
+      <h>111</h>
     </coordinates>
-    <panel_attributes>*&lt;nav&gt; "menu"*
-bg=green</panel_attributes>
-    <additional_attributes/>
-    <custom_code>int y=textHeight();
-
-drawRectangleRound(0,0,width,height,20,20);
-
-for(String textline : textlines) {
-	y += printLeft(textline,y);
-}</custom_code>
-  </element>
-  <element>
-    <type>CustomElementImpl</type>
-    <coordinates>
-      <x>10</x>
-      <y>590</y>
-      <w>411</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>/&lt;footer&gt;/
+    <panel_attributes>/&lt;div&gt; #menus .uneditable/
+flex-grow: 1;
+_flew-flow: row;_
 bg=#3c7a00</panel_attributes>
     <additional_attributes/>
     <custom_code>int y=textHeight();
@@ -214,11 +270,53 @@ for(String textline : textlines) {
     <type>CustomElementImpl</type>
     <coordinates>
       <x>10</x>
-      <y>70</y>
-      <w>411</w>
-      <h>361</h>
+      <y>90</y>
+      <w>461</w>
+      <h>571</h>
     </coordinates>
-    <panel_attributes>*&lt;section&gt; "main"*
+    <panel_attributes>/&lt;div&gt; #content .uneditable/
+flex-grow: 1;
+_flew-flow: column;_
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>500</x>
+      <y>40</y>
+      <w>581</w>
+      <h>41</h>
+    </coordinates>
+    <panel_attributes>/&lt;header&gt; .uneditable/
+flex-grow: 0;
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>750</x>
+      <y>210</y>
+      <w>311</w>
+      <h>41</h>
+    </coordinates>
+    <panel_attributes>*&lt;aside&gt; #display .editable*
+flex-grow: 1;
 bg=green</panel_attributes>
     <additional_attributes/>
     <custom_code>int y=textHeight();
@@ -232,12 +330,96 @@ for(String textline : textlines) {
   <element>
     <type>CustomElementImpl</type>
     <coordinates>
-      <x>10</x>
-      <y>440</y>
-      <w>411</w>
-      <h>141</h>
+      <x>750</x>
+      <y>260</y>
+      <w>311</w>
+      <h>41</h>
     </coordinates>
-    <panel_attributes>/&lt;div&gt; "second"/
+    <panel_attributes>*&lt;nav&gt; #menu .editable*
+flex-grow: 0;
+bg=green</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>500</x>
+      <y>330</y>
+      <w>581</w>
+      <h>41</h>
+    </coordinates>
+    <panel_attributes>/&lt;footer&gt; .uneditable/
+flex-grow: 0;
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>510</x>
+      <y>150</y>
+      <w>221</w>
+      <h>161</h>
+    </coordinates>
+    <panel_attributes>*&lt;section&gt; #main .editable*
+flex-grow: 0;
+order: 0; OR order: 1;
+bg=green</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>740</x>
+      <y>150</y>
+      <w>331</w>
+      <h>161</h>
+    </coordinates>
+    <panel_attributes>/&lt;div&gt; #menus .uneditable/
+flex-grow: 1;
+_flew-flow: column;_
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>500</x>
+      <y>90</y>
+      <w>581</w>
+      <h>231</h>
+    </coordinates>
+    <panel_attributes>/&lt;div&gt; #content .uneditable/
+flex-grow: 1;
+_flew-flow: row;_
 bg=#3c7a00</panel_attributes>
     <additional_attributes/>
     <custom_code>int y=textHeight();
@@ -252,11 +434,52 @@ for(String textline : textlines) {
     <type>CustomElementImpl</type>
     <coordinates>
       <x>0</x>
-      <y>10</y>
-      <w>431</w>
-      <h>621</h>
+      <y>0</y>
+      <w>481</w>
+      <h>721</h>
     </coordinates>
     <panel_attributes>/&lt;body&gt;/
+_flex-flow: column;_
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>490</x>
+      <y>0</y>
+      <w>601</w>
+      <h>381</h>
+    </coordinates>
+    <panel_attributes>/&lt;body&gt; LANDSCAPE OPTION 1/
+_flex-flow: column;_
+bg=#3c7a00</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=textHeight();
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	y += printLeft(textline,y);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>490</x>
+      <y>390</y>
+      <w>631</w>
+      <h>381</h>
+    </coordinates>
+    <panel_attributes>/&lt;body&gt; LANDSCAPE OPTION 2/
+_flex-flow: row;_
 bg=#3c7a00</panel_attributes>
     <additional_attributes/>
     <custom_code>int y=textHeight();
