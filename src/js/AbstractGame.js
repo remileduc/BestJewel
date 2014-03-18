@@ -377,7 +377,7 @@ AbstractdGame.prototype.onCancel = function() {};
  */
 AbstractdGame.prototype.onMouseDown = function(e)
 {
-	if (e.buttons === 1) // left button
+	if (e.button === 0) // left button
 		this.onDown(new Point(e.pageX, e.pageY));
 };
 
@@ -387,7 +387,7 @@ AbstractdGame.prototype.onMouseDown = function(e)
  */
 AbstractdGame.prototype.onMouseMove = function(e)
 {
-	if (e.buttons === 1) // left button
+	if (e.button === 0) // left button
 		this.onMove(new Point(e.pageX, e.pageY));
 };
 
@@ -397,7 +397,7 @@ AbstractdGame.prototype.onMouseMove = function(e)
  */
 AbstractdGame.prototype.onMouseUp = function (e)
 {
-	if (e.buttons === 1) // left button
+	if (e.button === 0) // no buttons (all released)
 		this.onUp(new Point(e.pageX, e.pageY));
 };
 
@@ -407,7 +407,7 @@ AbstractdGame.prototype.onMouseUp = function (e)
  */
 AbstractdGame.prototype.onMouseOut = function (e)
 {
-	if (e.buttons === 1) // left button
+	if (e.button === 0) // left button
 		this.onCancel();
 };
 

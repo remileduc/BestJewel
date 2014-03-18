@@ -112,12 +112,14 @@ function StandardGame (cxt)
 	 */
 	this.onMove = function(pagePoint)
 	{
-		var point = pagePoint, i;
-		point.x -= this.offsetX;
-		point.y -= this.offsetY;
+		var point, i;
 
 		if (mouseDown)
 		{
+			point  = pagePoint;
+			point.x -= this.offsetX;
+			point.y -= this.offsetY;
+
 			if (!this.grid.isSelected(this.lastClickedPoint))
 				this.setSelected(this.lastClickedPoint, true);
 
