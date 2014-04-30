@@ -225,7 +225,7 @@ function AbstractdGame ()
 				points = 0;
 		}
 		if (htmels.elPoints)
-			htmels.elPoints.innerHTML = "POINTS: " + points;
+			htmels.elPoints.textContent = "POINTS: " + points;
 	};
 
 	/**
@@ -241,7 +241,7 @@ function AbstractdGame ()
 		else
 			possibleMoves = nbMoves;
 		if (htmels.elMoves)
-			htmels.elMoves.innerHTML = "MOVES: " + (possibleMoves < 0 ? "..." : possibleMoves);
+			htmels.elMoves.textContent = "MOVES: " + (possibleMoves < 0 ? "..." : possibleMoves);
 		if (possibleMoves === 0)
 			this.endGame();
 	};
@@ -258,7 +258,7 @@ function AbstractdGame ()
 			timeString = (dateBegin.getMinutes() < 10 ? "0" : "") + dateBegin.getMinutes();
 			timeString += ":";
 			timeString += (dateBegin.getSeconds() < 10 ? "0" : "") + dateBegin.getSeconds();
-			htmels.elTime.innerHTML = "TIME: " + timeString;
+			htmels.elTime.textContent = "TIME: " + timeString;
 		}
 		if (dateBegin.getTime() <= 0) // end of game
 			this.timeout();
