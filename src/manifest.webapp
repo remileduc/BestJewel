@@ -1,0 +1,15 @@
+{
+	"name": "Best Jewel",
+	"description": "Jewel game with multi mods for Firefox OS",
+	"version": "0.3",
+	"developer": {
+		"name": "Rémi Ducceschi",
+		"url": "https://github.com/remileduc"
+	},
+	"launch_path": "/index.html",
+	"icons": {
+		"120": "/style/icons/icon120.png",
+		"128": "/style/icons/icon128.png"
+	},
+	"fullscreen": "true"
+}
