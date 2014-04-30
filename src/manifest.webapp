@@ -6,10 +6,10 @@
 		"name": "Rémi Ducceschi",
 		"url": "https://github.com/remileduc"
 	},
-	"launch_path": "/index.html",
+	"launch_path": "/BestJewel/src/index.html",
 	"icons": {
-		"120": "/style/icons/icon120.png",
-		"128": "/style/icons/icon128.png"
+		"120": "/BestJewel/src/style/icons/icon120.png",
+		"128": "/BestJewel/src/style/icons/icon128.png"
 	},
 	"fullscreen": "true"
 }
