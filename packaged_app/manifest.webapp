@@ -1,0 +1,16 @@
+{
+	"name": "Best Jewel",
+	"description": "Jewel game with multi mods for Firefox OS",
+	"version": "0.3",
+	"package_path": "https://remileduc.github.io/BestJewel/packaged_app/bestJewel.zip",
+	"developer": {
+		"name": "Rémi Ducceschi",
+		"url": "https://github.com/remileduc"
+	},
+	"launch_path": "/index.html",
+	"icons": {
+		"120": "../src/style/icons/icon120.png",
+		"128": "../src/style/icons/icon128.png"
+	},
+	"fullscreen": "true"
+}
