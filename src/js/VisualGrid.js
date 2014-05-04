@@ -365,6 +365,8 @@ function VisualGrid (cxt, grille)
 			framerate = 0;
 			actionVars.rmPoints = points;
 			listActionsEnd.push(this.removeDiamond); // we add the function in the list of actions
+			if (points.length !== 0) // we make the phone vibrate to show that some stuff have been removed
+				navigator.vibrate(50);
 		}
 		else
 			framerate = points;
